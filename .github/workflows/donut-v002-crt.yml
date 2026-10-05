@@ -1,0 +1,212 @@
+name: "Donut v002: luscious 48 fps + CRT tube"
+
+# Renders the v002 turntable on Apple Silicon (M-series) macOS runners, split across
+# parallel shards, then assembles the luscious and CRT videos and commits them back.
+on:
+  push:
+    paths:
+      - ".github/workflows/donut-v002-crt.yml"
+      - "blender/recipes/pink_donut_sprinkles_v002/**"
+      - "tools/looks/**"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: donut-v002-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  BLENDER_SERIES: "4.5"
+  MCP_FOR_BLENDER_VERSION: "2.1.3"
+  BLENDER_MCP_TIMEOUT: "900"
+  BLENDER_PORT: "9876"
+  DISABLE_TELEMETRY: "true"
+  ASSET_NAME: pink_donut_sprinkles
+  ASSET_VERSION: v002
+  ASSET_DIR: assets/props/food/pink_donut_sprinkles/v002
+  RECIPE: blender/recipes/pink_donut_sprinkles_v002
+  FRAMES: "288"                       # one full turn at 48 fps = 6 s
+  SHARDS: "5"                         # GitHub Free allows 5 concurrent macOS jobs
+  USER_PROMPT: "in slow mo 70s vision. can you add some crt bloom in the rendering pipeline too? the speed needs to be at least half of the current rate"
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  render:
+    name: Render frames (shard ${{ matrix.shard }})
+    runs-on: macos-latest             # Apple Silicon (M-series) GitHub-hosted runner
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      max-parallel: 5
+      matrix:
+        shard: [0, 1, 2, 3, 4]
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      - name: Runner info
+        run: |
+          sw_vers
+          echo "arch: $(uname -m)  cpu: $(sysctl -n machdep.cpu.brand_string)  cores: $(sysctl -n hw.ncpu)"
+          mkdir -p logs out
+
+      - name: Install Blender ${{ env.BLENDER_SERIES }} LTS
+        run: |
+          base="https://download.blender.org/release/Blender${BLENDER_SERIES}"
+          dmg=$(curl -fsSL --retry 4 "$base/" \
+            | grep -oE "blender-${BLENDER_SERIES}\.[0-9]+-macos-arm64\.dmg" | sort -u | sort -t. -k3,3n | tail -1)
+          [ -n "$dmg" ] || { echo "::error::no macOS arm64 build found under $base"; exit 1; }
+          version=${dmg#blender-}; version=${version%-macos-arm64.dmg}
+          curl -fL --retry 4 -o "$RUNNER_TEMP/$dmg" "$base/$dmg"
+          expected=$(curl -fsSL --retry 4 "$base/blender-${version}.sha256" 2>/dev/null | awk -v f="$dmg" '$2 == f {print $1}')
+          actual=$(shasum -a 256 "$RUNNER_TEMP/$dmg" | awk '{print $1}')
+          if [ -n "$expected" ]; then
+            [ "$expected" = "$actual" ] || { echo "::error::SHA-256 mismatch for $dmg"; exit 1; }
+            echo "SHA-256 verified: $actual"
+          else
+            echo "::warning::no published SHA-256 found for $dmg; downloaded file hashes to $actual"
+          fi
+          PAGER=cat hdiutil attach -nobrowse -readonly -mountpoint "$RUNNER_TEMP/blender-dmg" "$RUNNER_TEMP/$dmg" < <(yes Y)
+          cp -R "$RUNNER_TEMP/blender-dmg/Blender.app" "$RUNNER_TEMP/"
+          hdiutil detach "$RUNNER_TEMP/blender-dmg"
+          echo "BLENDER=$RUNNER_TEMP/Blender.app/Contents/MacOS/Blender" >> "$GITHUB_ENV"
+          "$RUNNER_TEMP/Blender.app/Contents/MacOS/Blender" --version | head -1
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v6
+
+      - name: Install MCP for Blender ${{ env.MCP_FOR_BLENDER_VERSION }}
+        run: |
+          uv venv .venv --python 3.12
+          uv pip install --python .venv "mcp-for-blender==${MCP_FOR_BLENDER_VERSION}"
+          addon=$(.venv/bin/python -c "import blender_mcp.bundled as b, os; print(os.path.join(os.path.dirname(b.__file__), 'addon.py'))")
+          echo "BLENDER_MCP_ADDON=$addon" >> "$GITHUB_ENV"
+
+      - name: Start Blender with the MCP addon (headless)
+        run: |
+          export MCP_HOST_READY_FILE="$PWD/logs/host.ready"
+          nohup "$BLENDER" -b --factory-startup --python blender/mcp/mcp_host.py > logs/blender_host.log 2>&1 &
+          echo $! > logs/blender.pid
+          for _ in $(seq 120); do
+            [ -f logs/host.ready ] && break
+            kill -0 "$(cat logs/blender.pid)" 2>/dev/null || break
+            sleep 1
+          done
+          cat logs/blender_host.log
+          [ -f logs/host.ready ] || { echo "::error::Blender MCP host did not come up"; exit 1; }
+
+      - name: Render this shard's frames through MCP
+        env:
+          SHARD: ${{ matrix.shard }}
+        run: |
+          start=$(( FRAMES * SHARD / SHARDS )); end=$(( FRAMES * (SHARD + 1) / SHARDS ))
+          echo "Shard $SHARD renders frames $start-$((end - 1))"
+          skip=()
+          # Only shard 0 saves the .blend/.glb and renders the hero still.
+          [ "$SHARD" = "0" ] || skip=(--skip 07_save_and_export)
+          .venv/bin/python blender/mcp/drive_recipe.py \
+            --recipe "$RECIPE" --output-dir out \
+            --asset-name "$ASSET_NAME" --version "$ASSET_VERSION" \
+            --width 1600 --height 1200 --samples 64 \
+            --turntable-frames "$FRAMES" --turntable-fps 48 \
+            --turntable-width 720 --turntable-height 540 --turntable-samples 32 \
+            --frames-dir out/frames --frame-range "$start:$end" --batch-size 12 \
+            "${skip[@]}" --user-prompt "$USER_PROMPT" \
+            --transcript "out/mcp_transcript_shard${SHARD}.json" \
+            2> logs/mcp_server.log | tee logs/mcp_client.log
+
+      - name: Wait for Blender to exit
+        if: always()
+        run: |
+          pid=$(cat logs/blender.pid 2>/dev/null || true)
+          [ -n "$pid" ] || exit 0
+          for _ in $(seq 60); do kill -0 "$pid" 2>/dev/null || break; sleep 1; done
+          if kill -0 "$pid" 2>/dev/null; then echo "::warning::Blender still running, killing"; kill "$pid"; fi
+          tail -n 20 logs/blender_host.log
+          echo "frames rendered: $(ls out/frames | wc -l)"
+
+      - name: Upload shard output
+        uses: actions/upload-artifact@v4
+        with:
+          name: v002-shard-${{ matrix.shard }}
+          path: out/
+          retention-days: 7
+
+      - name: Upload shard logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v002-logs-shard-${{ matrix.shard }}
+          path: logs/
+          retention-days: 7
+
+  assemble:
+    name: Assemble videos and commit
+    needs: render
+    runs-on: macos-latest
+    timeout-minutes: 90
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v6
+
+      - name: Install Python tools and ffmpeg
+        run: |
+          uv venv .venv --python 3.12
+          uv pip install --python .venv numpy pillow scipy
+          command -v ffmpeg >/dev/null || brew install ffmpeg
+          ffmpeg -hide_banner -encoders | grep -E "libx264|libwebp_anim"
+
+      - name: Download rendered shards
+        uses: actions/download-artifact@v4
+        with:
+          pattern: v002-shard-*
+          path: shards
+          merge-multiple: true
+
+      - name: Check every frame arrived
+        run: |
+          got=$(ls shards/frames/frame_*.png | wc -l | tr -d ' ')
+          echo "frames: $got / $FRAMES"
+          [ "$got" -eq "$FRAMES" ] || { echo "::error::expected $FRAMES frames, got $got"; exit 1; }
+
+      - name: Build luscious and CRT videos
+        run: |
+          mkdir -p logs
+          PYTHON=.venv/bin/python tools/looks/build_videos.sh shards/frames "$ASSET_DIR/renders" \
+            "${ASSET_NAME}_${ASSET_VERSION}" logs/video_work
+
+      - name: File the asset
+        run: |
+          mkdir -p "$ASSET_DIR/renders"
+          cp shards/*.blend shards/*.glb shards/asset.json "$ASSET_DIR/"
+          cp shards/renders/*_hero.png "$ASSET_DIR/renders/"
+          cp shards/mcp_transcript_shard*.json "$ASSET_DIR/"
+          .venv/bin/python tools/looks/record_videos.py "$ASSET_DIR" --frames "$FRAMES" --shards "$SHARDS"
+
+      - name: Regenerate README and manifest
+        run: |
+          .venv/bin/python tools/build_readme.py
+          .venv/bin/python tools/build_manifest.py
+          ls -la "$ASSET_DIR" "$ASSET_DIR/renders"
+
+      - name: Commit results back to ${{ github.ref_name }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A "$ASSET_DIR" README.md manifest.json
+          if git diff --cached --quiet; then echo "Nothing new to commit"; exit 0; fi
+          git commit -m "Donut v002: luscious 48 fps + CRT tube, rendered on Apple Silicon runners" \
+                     -m "Workflow run: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          for attempt in 1 2 3; do
+            git pull --rebase origin "${GITHUB_REF_NAME}" && git push origin "HEAD:${GITHUB_REF_NAME}" && exit 0
+            sleep $((attempt * 5))
+          done
+          echo "::error::could not push results"; exit 1

@@ -1,17 +1,18 @@
 {
   "schema": "ceeloscratch.manifest/1",
-  "generated_at": "2026-10-05T01:15:19+00:00",
+  "generated_at": "2026-10-05T05:05:05+00:00",
   "layout": {
     ".github/workflows/": "GitHub Actions pipelines (runner jobs).",
     "assets/": "Generated deliverables. Pattern: assets/<category>/<subcategory>/<asset_name>/<version>/",
     "assets/<...>/<version>/<asset>_<version>.blend": "Editable Blender source scene (asset + stage).",
     "assets/<...>/<version>/<asset>_<version>.glb": "Real-time glTF binary of the asset only (Y-up, meters).",
-    "assets/<...>/<version>/renders/": "Rendered stills and turntable GIF of that version.",
+    "assets/<...>/<version>/renders/": "Rendered stills, turntable GIF/WebP previews and MP4 videos of that version.",
     "assets/<...>/<version>/asset.json": "Metadata: parts, poly counts, render settings, tool versions.",
-    "assets/<...>/<version>/mcp_transcript.json": "Every MCP tool call that built the version, with replies.",
+    "assets/<...>/<version>/mcp_transcript*.json": "Every MCP tool call that built the version (one per render shard), with replies.",
     "blender/mcp/": "Glue for driving Blender through MCP for Blender (headless host, server launcher, client).",
     "blender/recipes/<asset_name>/": "Ordered steps (NN_name.py), each sent to Blender as one execute_blender_code call.",
-    "tools/": "Repository housekeeping scripts (manifest, README)."
+    "tools/": "Repository housekeeping scripts (manifest, README).",
+    "tools/looks/": "Post-render looks: vanity filter, 1970s CRT simulation, video assembly."
   },
   "assets": [
     {
@@ -29,9 +30,15 @@
   "files": [
     {
       "path": ".gitattributes",
-      "bytes": 198,
-      "sha256": "639cf8c8433ce612e5d806e67fe20772ef5204687d0f8b0711fd672582678092",
+      "bytes": 228,
+      "sha256": "bc1129ef315b319f50892bcc533759c2c0ef6d2f84d01bdb8d601c0369c4d32d",
       "role": "repo-meta"
+    },
+    {
+      "path": ".github/workflows/donut-v002-crt.yml",
+      "bytes": 8843,
+      "sha256": "ddcc17f261a9eb5db9737c4191b4e7eb3d427aea231bbf501eaba077eb953158",
+      "role": "workflow"
     },
     {
       "path": ".github/workflows/maiden-voyage-donut.yml",
@@ -47,8 +54,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 6989,
-      "sha256": "eb6e322e6b3eb28308a19a2175802a3f0adbc4251a56602c6d7418395514b387",
+      "bytes": 8932,
+      "sha256": "5b99f4a81992112aa53ad460df5a10a3766b1fe556ff7dbc2ed8faef09828407",
       "role": "repo-meta"
     },
     {
@@ -89,8 +96,8 @@
     },
     {
       "path": "blender/mcp/drive_recipe.py",
-      "bytes": 5886,
-      "sha256": "95d710b29ace9639be816369b05d5de8e9a07694ad648fb6f0a225c52eecefc9",
+      "bytes": 7429,
+      "sha256": "c0057d1474870e9b41bcf224393909f80f429654dfd01ba73aa5041e30f8475c",
       "role": "mcp-glue"
     },
     {
@@ -148,16 +155,88 @@
       "role": "recipe-step"
     },
     {
+      "path": "blender/recipes/pink_donut_sprinkles_v002/01_reset_scene.py",
+      "bytes": 930,
+      "sha256": "b249f66effe243abd9baea82db763a574d59f2da0c396ba7173f25343f0f3693",
+      "role": "recipe-step"
+    },
+    {
+      "path": "blender/recipes/pink_donut_sprinkles_v002/02_donut_body.py",
+      "bytes": 3013,
+      "sha256": "216cc91c420693eb9df2d8b4ec7f323f8cc92adbb5bebd4f2e9b258d2f38fce4",
+      "role": "recipe-step"
+    },
+    {
+      "path": "blender/recipes/pink_donut_sprinkles_v002/03_icing.py",
+      "bytes": 1821,
+      "sha256": "e622f02ae77a2680a25ab0b9f682f53c1dac010a7834d87260368bb910282895",
+      "role": "recipe-step"
+    },
+    {
+      "path": "blender/recipes/pink_donut_sprinkles_v002/04_sprinkles.py",
+      "bytes": 3520,
+      "sha256": "30220c86c24311c97d99d8a6ad673728fe57888dc9138b39791afd27e637a3ac",
+      "role": "recipe-step"
+    },
+    {
+      "path": "blender/recipes/pink_donut_sprinkles_v002/05_stage.py",
+      "bytes": 3702,
+      "sha256": "3ab791b4f33290dd454a8f67cb6691a7bfaaa664eee587eeaf11bf9e2a29ecd3",
+      "role": "recipe-step"
+    },
+    {
+      "path": "blender/recipes/pink_donut_sprinkles_v002/06_luscious.py",
+      "bytes": 2434,
+      "sha256": "e05d40e1d47af1e3c3a3cc98cd27cb335264007423d5236bf414799eb48a1cdb",
+      "role": "recipe-step"
+    },
+    {
+      "path": "blender/recipes/pink_donut_sprinkles_v002/07_save_and_export.py",
+      "bytes": 2842,
+      "sha256": "8cce36a5f1c2b193aaf9454814c5f62fe3aab53725aced433b8576313b897265",
+      "role": "recipe-step"
+    },
+    {
+      "path": "blender/recipes/pink_donut_sprinkles_v002/08_turntable.each.py",
+      "bytes": 1633,
+      "sha256": "2266a28c0971ae2082380a7c1273dd49b87bd66a1d4c24ad7b2c5a41148e58fd",
+      "role": "recipe-step"
+    },
+    {
       "path": "tools/build_manifest.py",
-      "bytes": 3517,
-      "sha256": "bc4d066bbc7b43f64599a409cdb8fcf77ace0d0eac5451370e8e0321580f29c7",
+      "bytes": 3768,
+      "sha256": "01c8a047f44be8673071987d2388ed1192f1380887912e0c2654b40508ba2eb8",
       "role": "tooling"
     },
     {
       "path": "tools/build_readme.py",
-      "bytes": 8374,
-      "sha256": "075aeee21e6079501e9393b5c8a449b20aa2a615cc77474b192b40e4b2d96f8e",
+      "bytes": 12451,
+      "sha256": "ad4391fb97c8e9026ceecc9eea759a05b3fdf700ec4b980364cf5969dca61316",
       "role": "tooling"
+    },
+    {
+      "path": "tools/looks/build_videos.sh",
+      "bytes": 2978,
+      "sha256": "15a5bafb3387cfaaec839eaede7a188fe5d1017362e9690282765fc1528f72f2",
+      "role": "look-stage"
+    },
+    {
+      "path": "tools/looks/crt_sim.py",
+      "bytes": 10373,
+      "sha256": "2103ff79832bed2af0a3b311a240707b71e70394d0674007643307c8dc2ab83b",
+      "role": "look-stage"
+    },
+    {
+      "path": "tools/looks/record_videos.py",
+      "bytes": 2970,
+      "sha256": "de28aeea27dd01fb464e7882df321ff7e86ff2e0103d5de2aa120a897e15f0a5",
+      "role": "look-stage"
+    },
+    {
+      "path": "tools/looks/vanity.py",
+      "bytes": 1848,
+      "sha256": "335167d3efa94021403bbdf2b07d19d05d236eba0eb19507f5fbe65d3a686aa4",
+      "role": "look-stage"
     },
     {
       "path": "tools/make_gif.py",

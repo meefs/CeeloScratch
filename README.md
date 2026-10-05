@@ -3,7 +3,12 @@
 A scratch space for creative experiments driven by Claude: pipelines run on GitHub Actions
 runners, and everything worth keeping is committed back here.
 
-## Maiden voyage: a pink donut with sprinkles
+## v002: luscious 48 fps, then through a 1970s CRT
+
+> **Status: waiting for its first run.** [`.github/workflows/donut-v002-crt.yml`](.github/workflows/donut-v002-crt.yml) renders this version on
+> Apple Silicon runners and fills in this section.
+
+## Maiden voyage (v001): a pink donut with sprinkles
 
 ![Pink donut with sprinkles](assets/props/food/pink_donut_sprinkles/v001/renders/pink_donut_sprinkles_v001_hero.png)
 
@@ -37,7 +42,7 @@ runners, and everything worth keeping is committed back here.
 
 Full requests and replies: [`mcp_transcript.json`](assets/props/food/pink_donut_sprinkles/v001/mcp_transcript.json).
 
-## What the workflow does
+## What the v001 workflow does
 
 [`.github/workflows/maiden-voyage-donut.yml`](.github/workflows/maiden-voyage-donut.yml) runs once (on the push that adds or changes the pipeline, or manually) and:
 
@@ -80,9 +85,11 @@ timeout, the MCP server's wait for Blender (raised from its hardcoded 180 s by
 
 ```
 .
-├── .github/workflows/maiden-voyage-donut.yml   # the runner job
+├── .github/workflows/maiden-voyage-donut.yml   # v001 runner job
+├── .github/workflows/donut-v002-crt.yml        # v002: 5 render shards + assembly
 ├── assets/                                     # generated deliverables, versioned
 │   └── props/food/pink_donut_sprinkles/
+│       ├── v002/                                 # luscious + CRT: blend, glb, MP4s, WebPs, posters
 │       └── v001/
 │           ├── pink_donut_sprinkles_v001.blend # editable source scene (asset + stage)
 │           ├── pink_donut_sprinkles_v001.glb   # real-time asset only (Y-up, meters)
@@ -95,16 +102,33 @@ timeout, the MCP server's wait for Blender (raised from its hardcoded 180 s by
 │   │   ├── mcp_host.py                         # runs inside Blender: hosts the MCP addon headless
 │   │   ├── mcp_server.py                       # launches mcp-for-blender with the 900 s timeout
 │   │   └── drive_recipe.py                     # MCP client: sends recipe steps as tool calls
-│   └── recipes/pink_donut_sprinkles/
-│       └── 01_reset_scene.py … 07_turntable.py
+│   └── recipes/
+│       ├── pink_donut_sprinkles/               # v001: 01_reset_scene.py … 07_turntable.py
+│       └── pink_donut_sprinkles_v002/          # v002: … 06_luscious.py, 07_save_and_export.py, 08_turntable.each.py
 ├── tools/
 │   ├── build_manifest.py                       # writes manifest.json
 │   ├── make_gif.py                             # stitches turntable frames into the GIF
+│   ├── looks/                                  # v002 post: vanity.py, crt_sim.py, build_videos.sh, record_videos.py
 │   └── build_readme.py                         # writes this README
 ├── manifest.json                               # layout + every file with size, SHA-256, role
 ├── .gitattributes                              # marks .blend/.glb/.png/.gif as binary
 └── .gitignore
 ```
+
+### v002 pipeline
+
+[`.github/workflows/donut-v002-crt.yml`](.github/workflows/donut-v002-crt.yml) splits the 288-frame turntable across five Apple Silicon runners
+(GitHub Free's limit for concurrent macOS jobs). Each runner drives Blender through MCP, sending its frames in
+batches of 12 per `execute_blender_code` call (`08_turntable.each.py`), so no call nears the 900 s timeout.
+Shard 0 also saves the `.blend`, `.glb` and hero still. A sixth macOS job then runs
+[`tools/looks/build_videos.sh`](tools/looks/build_videos.sh):
+
+1. `vanity.py`: soft-focus glow, glint bloom, warm blush grade, vignette, giving the luscious 48 fps MP4 and WebP.
+2. Motion interpolation to twice the frames for half-speed slow motion, rebuilding the loop's seam frame.
+3. `crt_sim.py`: a physical model of a 1970s colour TV, from 70s film grade and composite-video smear to a
+   240-line electron beam whose spot widens with brightness, **blooming** (the raster swells and defocuses as
+   the picture brightens), tube curvature, phosphor afterglow, slot mask, hum bar, static, glass and bezel.
+4. Encoding: full-quality MP4, plus a lighter-static 640 px animated WebP that plays inline here.
 
 Conventions for future assets: `assets/<category>/<subcategory>/<asset_name>/<version>/`, files named
 `<asset_name>_<version>.<ext>`, recipes in `blender/recipes/<asset_name>/NN_step.py`. A new version
@@ -112,5 +136,5 @@ gets a new `vNNN` folder; old versions are never overwritten by hand.
 
 ## Running it again
 
-Actions → **Maiden voyage: pink donut** → **Run workflow**. Any push that changes the workflow,
-`blender/` or `tools/` also triggers it. The bot's own commit doesn't, so it never loops.
+Actions → **Maiden voyage: pink donut** (v001) or **Donut v002: luscious 48 fps + CRT tube** → **Run workflow**.
+Pushes that change a workflow's own files also trigger it. The bots' own commits don't, so nothing loops.

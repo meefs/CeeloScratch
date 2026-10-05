@@ -7,3 +7,5 @@
 *.jpg   binary
 *.exr   binary
 *.hdr   binary
+*.mp4   binary
+*.webp  binary

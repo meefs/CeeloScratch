@@ -21,12 +21,13 @@ LAYOUT = {
     "assets/": "Generated deliverables. Pattern: assets/<category>/<subcategory>/<asset_name>/<version>/",
     "assets/<...>/<version>/<asset>_<version>.blend": "Editable Blender source scene (asset + stage).",
     "assets/<...>/<version>/<asset>_<version>.glb": "Real-time glTF binary of the asset only (Y-up, meters).",
-    "assets/<...>/<version>/renders/": "Rendered stills and turntable GIF of that version.",
+    "assets/<...>/<version>/renders/": "Rendered stills, turntable GIF/WebP previews and MP4 videos of that version.",
     "assets/<...>/<version>/asset.json": "Metadata: parts, poly counts, render settings, tool versions.",
-    "assets/<...>/<version>/mcp_transcript.json": "Every MCP tool call that built the version, with replies.",
+    "assets/<...>/<version>/mcp_transcript*.json": "Every MCP tool call that built the version (one per render shard), with replies.",
     "blender/mcp/": "Glue for driving Blender through MCP for Blender (headless host, server launcher, client).",
     "blender/recipes/<asset_name>/": "Ordered steps (NN_name.py), each sent to Blender as one execute_blender_code call.",
     "tools/": "Repository housekeeping scripts (manifest, README).",
+    "tools/looks/": "Post-render looks: vanity filter, 1970s CRT simulation, video assembly.",
 }
 
 ROLES = [
@@ -34,11 +35,14 @@ ROLES = [
     ("assets/", ".glb", "gltf-binary"),
     ("assets/", ".png", "render"),
     ("assets/", ".gif", "turntable"),
+    ("assets/", ".mp4", "video"),
+    ("assets/", ".webp", "animated-preview"),
     ("assets/", "asset.json", "asset-metadata"),
-    ("assets/", "mcp_transcript.json", "build-transcript"),
+    ("assets/", ".json", "build-transcript"),
     (".github/workflows/", "", "workflow"),
     ("blender/recipes/", ".py", "recipe-step"),
     ("blender/mcp/", ".py", "mcp-glue"),
+    ("tools/looks/", "", "look-stage"),
     ("tools/", ".py", "tooling"),
 ]
 
