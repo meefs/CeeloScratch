@@ -1,0 +1,68 @@
+{
+  "asset": "pink_donut_sprinkles",
+  "version": "v001",
+  "description": "Pink-iced donut with rainbow sprinkles, real-world scale (~9 cm diameter), Z-up in .blend, Y-up in .glb.",
+  "units": "meters",
+  "seed": 7,
+  "sprinkle_count": 237,
+  "parts": {
+    "donut_body": {
+      "vertices": 8192,
+      "faces": 8192,
+      "materials": [
+        "MAT_dough"
+      ]
+    },
+    "donut_icing": {
+      "vertices": 7680,
+      "faces": 7680,
+      "materials": [
+        "MAT_icing_pink"
+      ]
+    },
+    "donut_sprinkles": {
+      "vertices": 11850,
+      "faces": 11376,
+      "materials": [
+        "MAT_sprinkle_white",
+        "MAT_sprinkle_lemon",
+        "MAT_sprinkle_sky",
+        "MAT_sprinkle_mint",
+        "MAT_sprinkle_tangerine",
+        "MAT_sprinkle_grape"
+      ]
+    }
+  },
+  "files": {
+    "blend": "pink_donut_sprinkles_v001.blend",
+    "glb": "pink_donut_sprinkles_v001.glb",
+    "hero_render": "renders/pink_donut_sprinkles_v001_hero.png",
+    "turntable_gif": "renders/pink_donut_sprinkles_v001_turntable.gif"
+  },
+  "render": {
+    "engine": "CYCLES",
+    "device": "CPU",
+    "samples": 64,
+    "resolution": [
+      1600,
+      1200
+    ],
+    "seconds": 198.9
+  },
+  "built_with": {
+    "blender": "4.5.14 LTS",
+    "machine": "arm64",
+    "os": "macOS-26.6.2-arm64-arm-64bit",
+    "control": "MCP for Blender (execute_blender_code)"
+  },
+  "turntable": {
+    "frames": 48,
+    "resolution": [
+      480,
+      360
+    ],
+    "samples": 16,
+    "fps": 16,
+    "seconds": 210.8
+  }
+}

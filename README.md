@@ -5,8 +5,37 @@ runners, and everything worth keeping is committed back here.
 
 ## Maiden voyage: a pink donut with sprinkles
 
-> **Status: waiting for the first run.** The `.github/workflows/maiden-voyage-donut.yml` workflow builds the donut on a
-> GitHub macOS (Apple Silicon) runner and rewrites this README with the render and real numbers.
+![Pink donut with sprinkles](assets/props/food/pink_donut_sprinkles/v001/renders/pink_donut_sprinkles_v001_hero.png)
+
+![Pink donut turntable](assets/props/food/pink_donut_sprinkles/v001/renders/pink_donut_sprinkles_v001_turntable.gif)
+
+| | |
+|---|---|
+| **Asset** | `pink_donut_sprinkles` / `v001`: Pink-iced donut with rainbow sprinkles, real-world scale (~9 cm diameter), Z-up in .blend, Y-up in .glb. |
+| **Geometry** | 27,248 faces across 3 parts (donut_body, donut_icing, donut_sprinkles), 237 sprinkles, seed 7 |
+| **Render** | CYCLES on CPU, 1600×1200, 64 samples, 198.9 s |
+| **Turntable** | 48 frames, 480×360, 16 samples, 16 fps GIF, 210.8 s |
+| **Built with** | Blender 4.5.14 LTS on `arm64` (macOS-26.6.2-arm64-arm-64bit) |
+| **Driven by** | MCP for Blender (execute_blender_code), 11 MCP tool calls |
+| **Workflow run** | [https://github.com/meefs/CeeloScratch/actions/runs/37250161853](https://github.com/meefs/CeeloScratch/actions/runs/37250161853) |
+
+### The MCP calls that built it
+
+| Step | MCP tool | Time |
+|---|---|---|
+| `get_addon_status` | `get_addon_status` | 0.06 s |
+| `get_scene_info` | `get_scene_info` | 0.05 s |
+| `01_reset_scene` | `execute_blender_code` | 0.02 s |
+| `02_donut_body` | `execute_blender_code` | 0.09 s |
+| `03_icing` | `execute_blender_code` | 0.06 s |
+| `04_sprinkles` | `execute_blender_code` | 0.52 s |
+| `05_stage` | `execute_blender_code` | 0.16 s |
+| `06_save_and_export` | `execute_blender_code` | 200.95 s |
+| `07_turntable` | `execute_blender_code` | 210.85 s |
+| `get_scene_info (final)` | `get_scene_info` | 0.1 s |
+| `stop_host` | `execute_blender_code` | 0.13 s |
+
+Full requests and replies: [`mcp_transcript.json`](assets/props/food/pink_donut_sprinkles/v001/mcp_transcript.json).
 
 ## What the workflow does
 

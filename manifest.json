@@ -1,6 +1,6 @@
 {
   "schema": "ceeloscratch.manifest/1",
-  "generated_at": "2026-10-05T01:05:02+00:00",
+  "generated_at": "2026-10-05T01:15:19+00:00",
   "layout": {
     ".github/workflows/": "GitHub Actions pipelines (runner jobs).",
     "assets/": "Generated deliverables. Pattern: assets/<category>/<subcategory>/<asset_name>/<version>/",
@@ -13,7 +13,19 @@
     "blender/recipes/<asset_name>/": "Ordered steps (NN_name.py), each sent to Blender as one execute_blender_code call.",
     "tools/": "Repository housekeeping scripts (manifest, README)."
   },
-  "assets": [],
+  "assets": [
+    {
+      "asset": "pink_donut_sprinkles",
+      "version": "v001",
+      "path": "assets/props/food/pink_donut_sprinkles/v001/",
+      "files": {
+        "blend": "assets/props/food/pink_donut_sprinkles/v001/pink_donut_sprinkles_v001.blend",
+        "glb": "assets/props/food/pink_donut_sprinkles/v001/pink_donut_sprinkles_v001.glb",
+        "hero_render": "assets/props/food/pink_donut_sprinkles/v001/renders/pink_donut_sprinkles_v001_hero.png",
+        "turntable_gif": "assets/props/food/pink_donut_sprinkles/v001/renders/pink_donut_sprinkles_v001_turntable.gif"
+      }
+    }
+  ],
   "files": [
     {
       "path": ".gitattributes",
@@ -35,9 +47,45 @@
     },
     {
       "path": "README.md",
-      "bytes": 5461,
-      "sha256": "7b128caaf11f61a3be6bf5b9e4b0e09a0f2f0706c1589f183931670dffc8b47b",
+      "bytes": 6989,
+      "sha256": "eb6e322e6b3eb28308a19a2175802a3f0adbc4251a56602c6d7418395514b387",
       "role": "repo-meta"
+    },
+    {
+      "path": "assets/props/food/pink_donut_sprinkles/v001/asset.json",
+      "bytes": 1513,
+      "sha256": "439cf245729e8c72e29d60c365a37431103b1e563b85252dd80a79f6d487793b",
+      "role": "asset-metadata"
+    },
+    {
+      "path": "assets/props/food/pink_donut_sprinkles/v001/mcp_transcript.json",
+      "bytes": 29554,
+      "sha256": "9e86d02ea8ac2b15c576ca0b251426c353d1a03871e1c9e84af0078573c19739",
+      "role": "build-transcript"
+    },
+    {
+      "path": "assets/props/food/pink_donut_sprinkles/v001/pink_donut_sprinkles_v001.blend",
+      "bytes": 274817,
+      "sha256": "58461ad1beb7c0e3be6a03fe651bad5dbe005a90a03a82bc24bbb340a0ef54ec",
+      "role": "blender-source"
+    },
+    {
+      "path": "assets/props/food/pink_donut_sprinkles/v001/pink_donut_sprinkles_v001.glb",
+      "bytes": 999300,
+      "sha256": "fd51dbc31d0208b191912aa5a4e54083e0a99fcb681280417fa666b05f6ff7d0",
+      "role": "gltf-binary"
+    },
+    {
+      "path": "assets/props/food/pink_donut_sprinkles/v001/renders/pink_donut_sprinkles_v001_hero.png",
+      "bytes": 1846918,
+      "sha256": "d96f655f6f790880306216ccdfe7d605bd0e7a56bcd7b88f7a582fb41579fe8d",
+      "role": "render"
+    },
+    {
+      "path": "assets/props/food/pink_donut_sprinkles/v001/renders/pink_donut_sprinkles_v001_turntable.gif",
+      "bytes": 2373942,
+      "sha256": "93a3123e182bfa66605af915c928b2a6c53b30759c58628c1a3c0d9bd2d0f067",
+      "role": "turntable"
     },
     {
       "path": "blender/mcp/drive_recipe.py",
