@@ -6,7 +6,7 @@
 #   <stem>_luscious_poster.png, <stem>_crt_poster.png
 #
 # Usage: tools/looks/build_videos.sh <frames_dir> <renders_dir> <stem> [work_dir]
-# Needs: ffmpeg (libx264 + libwebp), python with numpy, pillow, scipy.
+# Needs: ffmpeg with libx264 (MP4s), python with numpy, pillow, scipy (WebPs are encoded by Pillow).
 set -euo pipefail
 
 FRAMES=$1
@@ -25,8 +25,7 @@ echo "frames: $N"
 "$PY" "$HERE/vanity.py" "$FRAMES" "$WORK/vanity"
 ffmpeg -y -loglevel error -framerate $FPS -i "$WORK/vanity/frame_%03d.png" \
   -c:v libx264 -crf 16 -preset slow -pix_fmt yuv420p -movflags +faststart "$RENDERS/${STEM}_luscious_48fps.mp4"
-ffmpeg -y -loglevel error -framerate $FPS -i "$WORK/vanity/frame_%03d.png" \
-  -c:v libwebp_anim -lossless 0 -quality 82 -compression_level 6 -loop 0 "$RENDERS/${STEM}_luscious_48fps.webp"
+"$PY" "$HERE/encode_webp.py" "$WORK/vanity" "$RENDERS/${STEM}_luscious_48fps.webp" --fps $FPS --quality 75
 cp "$WORK/vanity/frame_000.png" "$RENDERS/${STEM}_luscious_poster.png"
 
 # 2. Half-speed slow motion: motion-interpolate to 2x frames. The first three frames are appended again so the
@@ -45,8 +44,7 @@ GOT=$(ls "$WORK"/slowmo/frame_*.png | wc -l | tr -d ' ')
 "$PY" "$HERE/crt_sim.py" "$WORK/slowmo" "$WORK/crt_readme" --snow 0.006
 ffmpeg -y -loglevel error -framerate $FPS -i "$WORK/crt/frame_%04d.png" \
   -c:v libx264 -crf 17 -preset slow -pix_fmt yuv420p -movflags +faststart "$RENDERS/${STEM}_crt_48fps.mp4"
-ffmpeg -y -loglevel error -framerate $FPS -i "$WORK/crt_readme/frame_%04d.png" -vf "scale=640:-1:flags=area" \
-  -c:v libwebp_anim -lossless 0 -quality 60 -compression_level 6 -loop 0 "$RENDERS/${STEM}_crt_readme.webp"
+"$PY" "$HERE/encode_webp.py" "$WORK/crt_readme" "$RENDERS/${STEM}_crt_readme.webp" --fps $FPS --quality 30 --width 640
 # Poster at peak brightness (the lamp swell peaks a quarter of the way through the loop).
 cp "$WORK/crt/frame_$(printf %04d $((N / 2))).png" "$RENDERS/${STEM}_crt_poster.png"
 

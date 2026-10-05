@@ -40,6 +40,8 @@ def v2_section():
     calls = sum(len(json.loads((ROOT / V2_DIR / t).read_text())["calls"]) for t in f.get("mcp_transcripts", []))
     tt, sizes = meta["turntable"], meta["sizes_mb"]
     run = meta.get("workflow_run")
+    rr = meta.get("render_run")
+    render_row = f"\n| **Frames rendered in** | [{rr}]({rr}) |" if rr else ""
     effects = ", ".join(meta["videos"]["crt"]["effects"])
     return f"""[![Pink donut on a 1970s CRT, slow motion]({d}/{f['crt_readme_webp']})]({d}/{f['crt_mp4']})
 
@@ -56,7 +58,7 @@ def v2_section():
 | **Turntable** | {tt['frames']} real frames, {tt['resolution'][0]}×{tt['resolution'][1]}, {tt['samples']} samples, {tt['fps']} fps: rendered on {tt['rendered_on']} |
 | **CRT stage** | {effects} |
 | **Built with** | Blender {meta['built_with']['blender']} on `{meta['built_with']['machine']}`, {calls} MCP tool calls across all shards |
-| **Workflow run** | {f'[{run}]({run})' if run else '`' + V2_WORKFLOW + '`'} |
+| **Workflow run** | {f'[{run}]({run})' if run else '`' + V2_WORKFLOW + '`'} |{render_row}
 
 Everything is in [`{d}/`]({d}/): `.blend`, `.glb`, hero still, both MP4s and WebPs, posters,
 `asset.json`, and one MCP transcript per render shard."""

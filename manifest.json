@@ -1,6 +1,6 @@
 {
   "schema": "ceeloscratch.manifest/1",
-  "generated_at": "2026-10-05T05:05:05+00:00",
+  "generated_at": "2026-10-05T05:48:21+00:00",
   "layout": {
     ".github/workflows/": "GitHub Actions pipelines (runner jobs).",
     "assets/": "Generated deliverables. Pattern: assets/<category>/<subcategory>/<asset_name>/<version>/",
@@ -36,8 +36,8 @@
     },
     {
       "path": ".github/workflows/donut-v002-crt.yml",
-      "bytes": 8843,
-      "sha256": "ddcc17f261a9eb5db9737c4191b4e7eb3d427aea231bbf501eaba077eb953158",
+      "bytes": 9829,
+      "sha256": "094e653402b295e4e0e77316ac5e86b79aedb077414108aab434a59a69b13c87",
       "role": "workflow"
     },
     {
@@ -210,14 +210,14 @@
     },
     {
       "path": "tools/build_readme.py",
-      "bytes": 12451,
-      "sha256": "ad4391fb97c8e9026ceecc9eea759a05b3fdf700ec4b980364cf5969dca61316",
+      "bytes": 12573,
+      "sha256": "21ba7fef2e9a8971624a77b4a4334c803a47dbf60090ed7b413190b2f8a888c5",
       "role": "tooling"
     },
     {
       "path": "tools/looks/build_videos.sh",
-      "bytes": 2978,
-      "sha256": "15a5bafb3387cfaaec839eaede7a188fe5d1017362e9690282765fc1528f72f2",
+      "bytes": 2826,
+      "sha256": "04ef0e6d6ff8e3dac53411b0588a83622c2dd9018640fb1e652ab1dd214d82f9",
       "role": "look-stage"
     },
     {
@@ -227,9 +227,15 @@
       "role": "look-stage"
     },
     {
+      "path": "tools/looks/encode_webp.py",
+      "bytes": 1369,
+      "sha256": "d49f079b239d7ab479cc0d03bfc2cf81a5e8ebe6ce544dad93141852dadd2e69",
+      "role": "look-stage"
+    },
+    {
       "path": "tools/looks/record_videos.py",
-      "bytes": 2970,
-      "sha256": "de28aeea27dd01fb464e7882df321ff7e86ff2e0103d5de2aa120a897e15f0a5",
+      "bytes": 3215,
+      "sha256": "c98e8b34fa517634b10c506ae78eb8130abac40f8d8a937dc430c7aef8183a09",
       "role": "look-stage"
     },
     {

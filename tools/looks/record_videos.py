@@ -14,6 +14,7 @@ def main():
     parser.add_argument("asset_dir")
     parser.add_argument("--frames", type=int, required=True)
     parser.add_argument("--shards", type=int, required=True)
+    parser.add_argument("--render-run", help="run ID that rendered the frames, if not the current run")
     args = parser.parse_args()
 
     asset_dir = Path(args.asset_dir)
@@ -51,6 +52,8 @@ def main():
     server, repo, run_id = (os.environ.get(k) for k in ("GITHUB_SERVER_URL", "GITHUB_REPOSITORY", "GITHUB_RUN_ID"))
     if server and repo and run_id:
         meta["workflow_run"] = f"{server}/{repo}/actions/runs/{run_id}"
+        if args.render_run and args.render_run != run_id:
+            meta["render_run"] = f"{server}/{repo}/actions/runs/{args.render_run}"
     meta["sizes_mb"] = {k: round(os.path.getsize(asset_dir / v) / 1e6, 2) for k, v in renders.items()}
     meta_path.write_text(json.dumps(meta, indent=2) + "\n")
     print(json.dumps(meta["sizes_mb"]))

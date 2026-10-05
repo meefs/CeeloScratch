@@ -9,9 +9,15 @@ on:
       - "blender/recipes/pink_donut_sprinkles_v002/**"
       - "tools/looks/**"
   workflow_dispatch:
+    inputs:
+      reuse_frames_from_run:
+        description: "Run ID whose rendered frames to reuse (skips rendering); leave empty to render"
+        required: false
+        default: ""
 
 permissions:
   contents: write
+  actions: read                       # to download frames from an earlier run when reusing them
 
 concurrency:
   group: donut-v002-${{ github.ref }}
@@ -38,6 +44,7 @@ defaults:
 jobs:
   render:
     name: Render frames (shard ${{ matrix.shard }})
+    if: ${{ !inputs.reuse_frames_from_run }}
     runs-on: macos-latest             # Apple Silicon (M-series) GitHub-hosted runner
     timeout-minutes: 120
     strategy:
@@ -148,6 +155,8 @@ jobs:
   assemble:
     name: Assemble videos and commit
     needs: render
+    # Runs after a successful render, or straight away when reusing an earlier run's frames.
+    if: ${{ !cancelled() && (needs.render.result == 'success' || (needs.render.result == 'skipped' && inputs.reuse_frames_from_run)) }}
     runs-on: macos-latest
     timeout-minutes: 90
     steps:
@@ -161,8 +170,10 @@ jobs:
         run: |
           uv venv .venv --python 3.12
           uv pip install --python .venv numpy pillow scipy
-          command -v ffmpeg >/dev/null || brew install ffmpeg
-          ffmpeg -hide_banner -encoders | grep -E "libx264|libwebp_anim"
+          # MP4s need libx264; the WebPs are encoded by Pillow, so any ffmpeg with x264 will do.
+          if ! ffmpeg -hide_banner -encoders 2>/dev/null | grep -q libx264; then brew install ffmpeg; fi
+          ffmpeg -hide_banner -encoders | grep libx264
+          .venv/bin/python -c "from PIL import features; assert features.check('webp'), 'Pillow lacks WebP'"
 
       - name: Download rendered shards
         uses: actions/download-artifact@v4
@@ -170,6 +181,8 @@ jobs:
           pattern: v002-shard-*
           path: shards
           merge-multiple: true
+          run-id: ${{ inputs.reuse_frames_from_run || github.run_id }}
+          github-token: ${{ github.token }}
 
       - name: Check every frame arrived
         run: |
@@ -189,7 +202,8 @@ jobs:
           cp shards/*.blend shards/*.glb shards/asset.json "$ASSET_DIR/"
           cp shards/renders/*_hero.png "$ASSET_DIR/renders/"
           cp shards/mcp_transcript_shard*.json "$ASSET_DIR/"
-          .venv/bin/python tools/looks/record_videos.py "$ASSET_DIR" --frames "$FRAMES" --shards "$SHARDS"
+          .venv/bin/python tools/looks/record_videos.py "$ASSET_DIR" --frames "$FRAMES" --shards "$SHARDS" \
+            --render-run "${{ inputs.reuse_frames_from_run || github.run_id }}"
 
       - name: Regenerate README and manifest
         run: |
