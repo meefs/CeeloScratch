@@ -1,0 +1,23 @@
+# --- Pipeline scratch -------------------------------------------------------
+# Runner logs are uploaded as workflow artifacts instead of committed.
+logs/
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+
+# --- Blender ----------------------------------------------------------------
+# Automatic backup copies and partially written saves.
+*.blend1
+*.blend2
+*.blend@
+quit.blend
+
+# --- Tooling / OS -----------------------------------------------------------
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+.env
+.env.*

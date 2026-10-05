@@ -1,0 +1,9 @@
+# Keep line endings sane for text, and never diff or merge binary assets.
+* text=auto eol=lf
+*.blend binary
+*.glb   binary
+*.png   binary
+*.gif   binary
+*.jpg   binary
+*.exr   binary
+*.hdr   binary

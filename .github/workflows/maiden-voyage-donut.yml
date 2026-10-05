@@ -1,0 +1,151 @@
+name: "Maiden voyage: pink donut"
+
+# Runs once: on the push that adds or changes the pipeline, or by hand.
+# The bot's own commit (made with GITHUB_TOKEN) never re-triggers workflows.
+on:
+  push:
+    paths:
+      - ".github/workflows/maiden-voyage-donut.yml"
+      - "blender/**"
+      - "tools/**"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: maiden-voyage-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  BLENDER_SERIES: "4.5"               # LTS line; newest 4.5.x macOS arm64 build is resolved at run time
+  MCP_FOR_BLENDER_VERSION: "2.1.3"    # pinned MCP for Blender (server + bundled addon)
+  BLENDER_MCP_TIMEOUT: "900"          # seconds, applied to MCP client, MCP server and Blender host
+  BLENDER_PORT: "9876"
+  DISABLE_TELEMETRY: "true"
+  ASSET_NAME: pink_donut_sprinkles
+  ASSET_VERSION: v001
+  ASSET_DIR: assets/props/food/pink_donut_sprinkles/v001
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  donut:
+    name: Build pink donut via MCP for Blender
+    runs-on: macos-latest             # Apple Silicon (M-series) GitHub-hosted runner
+    timeout-minutes: 45
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      - name: Runner info
+        run: |
+          sw_vers
+          echo "arch: $(uname -m)  cpu: $(sysctl -n machdep.cpu.brand_string)  cores: $(sysctl -n hw.ncpu)"
+          echo "memory: $(( $(sysctl -n hw.memsize) / 1073741824 )) GB"
+          mkdir -p logs
+
+      - name: Install Blender ${{ env.BLENDER_SERIES }} LTS
+        run: |
+          base="https://download.blender.org/release/Blender${BLENDER_SERIES}"
+          dmg=$(curl -fsSL --retry 4 "$base/" \
+            | grep -oE "blender-${BLENDER_SERIES}\.[0-9]+-macos-arm64\.dmg" | sort -u | sort -t. -k3,3n | tail -1)
+          [ -n "$dmg" ] || { echo "::error::no macOS arm64 build found under $base"; exit 1; }
+          version=${dmg#blender-}; version=${version%-macos-arm64.dmg}
+          echo "Downloading $dmg"
+          curl -fL --retry 4 -o "$RUNNER_TEMP/$dmg" "$base/$dmg"
+
+          expected=$(curl -fsSL --retry 4 "$base/blender-${version}.sha256" 2>/dev/null | awk -v f="$dmg" '$2 == f {print $1}')
+          actual=$(shasum -a 256 "$RUNNER_TEMP/$dmg" | awk '{print $1}')
+          if [ -n "$expected" ]; then
+            [ "$expected" = "$actual" ] || { echo "::error::SHA-256 mismatch for $dmg"; exit 1; }
+            echo "SHA-256 verified: $actual"
+          else
+            echo "::warning::no published SHA-256 found for $dmg; downloaded file hashes to $actual"
+          fi
+
+          # Answer any licence prompt non-interactively (process substitution keeps pipefail happy).
+          PAGER=cat hdiutil attach -nobrowse -readonly -mountpoint "$RUNNER_TEMP/blender-dmg" "$RUNNER_TEMP/$dmg" < <(yes Y)
+          cp -R "$RUNNER_TEMP/blender-dmg/Blender.app" "$RUNNER_TEMP/"
+          hdiutil detach "$RUNNER_TEMP/blender-dmg"
+          echo "BLENDER=$RUNNER_TEMP/Blender.app/Contents/MacOS/Blender" >> "$GITHUB_ENV"
+          "$RUNNER_TEMP/Blender.app/Contents/MacOS/Blender" --version | head -1
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v6
+
+      - name: Install MCP for Blender ${{ env.MCP_FOR_BLENDER_VERSION }}
+        run: |
+          uv venv .venv --python 3.12
+          uv pip install --python .venv "mcp-for-blender==${MCP_FOR_BLENDER_VERSION}" pillow
+          addon=$(.venv/bin/python -c "import blender_mcp.bundled as b, os; print(os.path.join(os.path.dirname(b.__file__), 'addon.py'))")
+          echo "BLENDER_MCP_ADDON=$addon" >> "$GITHUB_ENV"
+          echo "Addon: $addon"
+
+      - name: Start Blender with the MCP addon (headless)
+        run: |
+          export MCP_HOST_READY_FILE="$PWD/logs/host.ready"
+          nohup "$BLENDER" -b --factory-startup --python blender/mcp/mcp_host.py \
+            > logs/blender_host.log 2>&1 &
+          echo $! > logs/blender.pid
+          for _ in $(seq 120); do
+            [ -f logs/host.ready ] && break
+            kill -0 "$(cat logs/blender.pid)" 2>/dev/null || break
+            sleep 1
+          done
+          cat logs/blender_host.log
+          [ -f logs/host.ready ] || { echo "::error::Blender MCP host did not come up"; exit 1; }
+
+      - name: Build the donut through MCP
+        run: |
+          .venv/bin/python blender/mcp/drive_recipe.py \
+            --recipe blender/recipes/pink_donut_sprinkles \
+            --output-dir "$ASSET_DIR" \
+            --asset-name "$ASSET_NAME" --version "$ASSET_VERSION" \
+            --width 1600 --height 1200 --samples 64 \
+            --turntable-frames 48 --turntable-fps 16 --frames-dir logs/turntable_frames \
+            --transcript "$ASSET_DIR/mcp_transcript.json" \
+            2> logs/mcp_server.log | tee logs/mcp_client.log
+
+      - name: Wait for Blender to exit
+        if: always()
+        run: |
+          pid=$(cat logs/blender.pid 2>/dev/null || true)
+          [ -n "$pid" ] || exit 0
+          for _ in $(seq 60); do kill -0 "$pid" 2>/dev/null || break; sleep 1; done
+          if kill -0 "$pid" 2>/dev/null; then echo "::warning::Blender still running, killing"; kill "$pid"; fi
+          tail -n 40 logs/blender_host.log
+
+      - name: Stitch the turntable GIF
+        run: .venv/bin/python tools/make_gif.py --frames logs/turntable_frames --asset-dir "$ASSET_DIR"
+
+      - name: Regenerate README and manifest
+        run: |
+          .venv/bin/python tools/build_readme.py
+          .venv/bin/python tools/build_manifest.py
+          ls -la "$ASSET_DIR" "$ASSET_DIR/renders"
+
+      - name: Upload logs and outputs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: maiden-voyage-${{ github.run_id }}
+          path: |
+            logs/
+            ${{ env.ASSET_DIR }}/
+
+      - name: Commit results back to ${{ github.ref_name }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A assets README.md manifest.json
+          if git diff --cached --quiet; then echo "Nothing new to commit"; exit 0; fi
+          git commit -m "Maiden voyage: build ${ASSET_NAME} ${ASSET_VERSION} via MCP for Blender" \
+                     -m "Workflow run: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          for attempt in 1 2 3; do
+            git pull --rebase origin "${GITHUB_REF_NAME}" && git push origin "HEAD:${GITHUB_REF_NAME}" && exit 0
+            sleep $((attempt * 5))
+          done
+          echo "::error::could not push results"; exit 1

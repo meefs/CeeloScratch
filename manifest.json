@@ -1,0 +1,121 @@
+{
+  "schema": "ceeloscratch.manifest/1",
+  "generated_at": "2026-10-05T01:05:02+00:00",
+  "layout": {
+    ".github/workflows/": "GitHub Actions pipelines (runner jobs).",
+    "assets/": "Generated deliverables. Pattern: assets/<category>/<subcategory>/<asset_name>/<version>/",
+    "assets/<...>/<version>/<asset>_<version>.blend": "Editable Blender source scene (asset + stage).",
+    "assets/<...>/<version>/<asset>_<version>.glb": "Real-time glTF binary of the asset only (Y-up, meters).",
+    "assets/<...>/<version>/renders/": "Rendered stills and turntable GIF of that version.",
+    "assets/<...>/<version>/asset.json": "Metadata: parts, poly counts, render settings, tool versions.",
+    "assets/<...>/<version>/mcp_transcript.json": "Every MCP tool call that built the version, with replies.",
+    "blender/mcp/": "Glue for driving Blender through MCP for Blender (headless host, server launcher, client).",
+    "blender/recipes/<asset_name>/": "Ordered steps (NN_name.py), each sent to Blender as one execute_blender_code call.",
+    "tools/": "Repository housekeeping scripts (manifest, README)."
+  },
+  "assets": [],
+  "files": [
+    {
+      "path": ".gitattributes",
+      "bytes": 198,
+      "sha256": "639cf8c8433ce612e5d806e67fe20772ef5204687d0f8b0711fd672582678092",
+      "role": "repo-meta"
+    },
+    {
+      "path": ".github/workflows/maiden-voyage-donut.yml",
+      "bytes": 6544,
+      "sha256": "154b7baeee489979468beb5af0602040467022bf254834bd5a1a235c13684531",
+      "role": "workflow"
+    },
+    {
+      "path": ".gitignore",
+      "bytes": 499,
+      "sha256": "f68970132c2812e141fb2e2f3571cf1b3b85de4296e1d71977911934e2cf86e4",
+      "role": "repo-meta"
+    },
+    {
+      "path": "README.md",
+      "bytes": 5461,
+      "sha256": "7b128caaf11f61a3be6bf5b9e4b0e09a0f2f0706c1589f183931670dffc8b47b",
+      "role": "repo-meta"
+    },
+    {
+      "path": "blender/mcp/drive_recipe.py",
+      "bytes": 5886,
+      "sha256": "95d710b29ace9639be816369b05d5de8e9a07694ad648fb6f0a225c52eecefc9",
+      "role": "mcp-glue"
+    },
+    {
+      "path": "blender/mcp/mcp_host.py",
+      "bytes": 3539,
+      "sha256": "251f4d0f389f1b518abbd551be4bc51a3dddeed1f8024ac3fc257b97419a6510",
+      "role": "mcp-glue"
+    },
+    {
+      "path": "blender/mcp/mcp_server.py",
+      "bytes": 866,
+      "sha256": "8d2770b1640b3922f9473050a24abf947fd0c02fd2384513eb77bac34d455061",
+      "role": "mcp-glue"
+    },
+    {
+      "path": "blender/recipes/pink_donut_sprinkles/01_reset_scene.py",
+      "bytes": 930,
+      "sha256": "b249f66effe243abd9baea82db763a574d59f2da0c396ba7173f25343f0f3693",
+      "role": "recipe-step"
+    },
+    {
+      "path": "blender/recipes/pink_donut_sprinkles/02_donut_body.py",
+      "bytes": 3013,
+      "sha256": "216cc91c420693eb9df2d8b4ec7f323f8cc92adbb5bebd4f2e9b258d2f38fce4",
+      "role": "recipe-step"
+    },
+    {
+      "path": "blender/recipes/pink_donut_sprinkles/03_icing.py",
+      "bytes": 1821,
+      "sha256": "e622f02ae77a2680a25ab0b9f682f53c1dac010a7834d87260368bb910282895",
+      "role": "recipe-step"
+    },
+    {
+      "path": "blender/recipes/pink_donut_sprinkles/04_sprinkles.py",
+      "bytes": 3520,
+      "sha256": "30220c86c24311c97d99d8a6ad673728fe57888dc9138b39791afd27e637a3ac",
+      "role": "recipe-step"
+    },
+    {
+      "path": "blender/recipes/pink_donut_sprinkles/05_stage.py",
+      "bytes": 3702,
+      "sha256": "3ab791b4f33290dd454a8f67cb6691a7bfaaa664eee587eeaf11bf9e2a29ecd3",
+      "role": "recipe-step"
+    },
+    {
+      "path": "blender/recipes/pink_donut_sprinkles/06_save_and_export.py",
+      "bytes": 2842,
+      "sha256": "8cce36a5f1c2b193aaf9454814c5f62fe3aab53725aced433b8576313b897265",
+      "role": "recipe-step"
+    },
+    {
+      "path": "blender/recipes/pink_donut_sprinkles/07_turntable.py",
+      "bytes": 1514,
+      "sha256": "af068e5a3e1b3e7cf86fc55aa6afd0e52b688d56a6f7ba9112f0a224d6529772",
+      "role": "recipe-step"
+    },
+    {
+      "path": "tools/build_manifest.py",
+      "bytes": 3517,
+      "sha256": "bc4d066bbc7b43f64599a409cdb8fcf77ace0d0eac5451370e8e0321580f29c7",
+      "role": "tooling"
+    },
+    {
+      "path": "tools/build_readme.py",
+      "bytes": 8374,
+      "sha256": "075aeee21e6079501e9393b5c8a449b20aa2a615cc77474b192b40e4b2d96f8e",
+      "role": "tooling"
+    },
+    {
+      "path": "tools/make_gif.py",
+      "bytes": 1878,
+      "sha256": "fa531148bb537293f3e5a25d079ea5a577a8a0ed9995c2bb848fd8ce927cd3c9",
+      "role": "tooling"
+    }
+  ]
+}
