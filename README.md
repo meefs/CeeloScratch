@@ -5,8 +5,26 @@ runners, and everything worth keeping is committed back here.
 
 ## v002: luscious 48 fps, then through a 1970s CRT
 
-> **Status: waiting for its first run.** [`.github/workflows/donut-v002-crt.yml`](.github/workflows/donut-v002-crt.yml) renders this version on
-> Apple Silicon runners and fills in this section.
+[![Pink donut on a 1970s CRT, slow motion](assets/props/food/pink_donut_sprinkles/v002/renders/pink_donut_sprinkles_v002_crt_readme.webp)](assets/props/food/pink_donut_sprinkles/v002/renders/pink_donut_sprinkles_v002_crt_48fps.mp4)
+
+*Half-speed slow motion through a simulated 1970s colour CRT. Click for the full-quality MP4
+(14.57 MB, 960×720, 48 fps).*
+
+[![Luscious pink donut, 48 fps](assets/props/food/pink_donut_sprinkles/v002/renders/pink_donut_sprinkles_v002_luscious_48fps.webp)](assets/props/food/pink_donut_sprinkles/v002/renders/pink_donut_sprinkles_v002_luscious_48fps.mp4)
+
+*The same turn in real time with the luscious look. Click for the MP4 (1.27 MB).*
+
+| | |
+|---|---|
+| **Look** | Wet, glossy icing with heavy clear coat; glamour lighting; blush backdrop; f/4 shallow focus; vanity filter |
+| **Turntable** | 288 real frames, 720×540, 32 samples, 48 fps: rendered on 5 parallel macOS arm64 runners, 57-ish frames each |
+| **CRT stage** | 70s film grade, lamp breathing, composite video bandwidth, 240-line beam scan, sync jitter, blooming (raster swell + defocus with brightness), barrel tube geometry, phosphor persistence, faceplate halation, slot mask, hum bar, RF snow, glass reflection and bezel |
+| **Built with** | Blender 4.5.14 LTS on `arm64`, 76 MCP tool calls across all shards |
+| **Workflow run** | [https://github.com/meefs/CeeloScratch/actions/runs/37269414435](https://github.com/meefs/CeeloScratch/actions/runs/37269414435) |
+| **Frames rendered in** | [https://github.com/meefs/CeeloScratch/actions/runs/37266266974](https://github.com/meefs/CeeloScratch/actions/runs/37266266974) |
+
+Everything is in [`assets/props/food/pink_donut_sprinkles/v002/`](assets/props/food/pink_donut_sprinkles/v002/): `.blend`, `.glb`, hero still, both MP4s and WebPs, posters,
+`asset.json`, and one MCP transcript per render shard.
 
 ## Maiden voyage (v001): a pink donut with sprinkles
 
