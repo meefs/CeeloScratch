@@ -28,6 +28,10 @@ LAYOUT = {
     "blender/recipes/<asset_name>/": "Ordered steps (NN_name.py), each sent to Blender as one execute_blender_code call.",
     "tools/": "Repository housekeeping scripts (manifest, README).",
     "tools/looks/": "Post-render looks: vanity filter, 1970s CRT simulation, video assembly.",
+    "fever/": "Fever Dreams framework: BlenderProc entry point (run_scene.py), shared core/, scenes/, runner tools/.",
+    "fever/scenes/": "One psychedelic loop per module: SCENE literal + build(ctx) + frame(ctx, state, t, f).",
+    "assets/fever/<scene>/": "Published loop: <scene>.mp4, <scene>_preview.webp (README), poster, scene.json.",
+    ".claude/skills/": "Skills (SKILL.md) that teach Claude how to extend this repo's pipelines.",
 }
 
 ROLES = [
@@ -38,11 +42,15 @@ ROLES = [
     ("assets/", ".mp4", "video"),
     ("assets/", ".webp", "animated-preview"),
     ("assets/", "asset.json", "asset-metadata"),
+    ("assets/", "scene.json", "scene-metadata"),
     ("assets/", ".json", "build-transcript"),
     (".github/workflows/", "", "workflow"),
     ("blender/recipes/", ".py", "recipe-step"),
     ("blender/mcp/", ".py", "mcp-glue"),
     ("tools/looks/", "", "look-stage"),
+    ("fever/scenes/", ".py", "fever-scene"),
+    ("fever/", "", "fever-framework"),
+    (".claude/skills/", "", "skill"),
     ("tools/", ".py", "tooling"),
 ]
 

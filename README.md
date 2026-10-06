@@ -3,6 +3,16 @@
 A scratch space for creative experiments driven by Claude: pipelines run on GitHub Actions
 runners, and everything worth keeping is committed back here.
 
+## Fever Dreams: BlenderProc + Poly Haven
+
+Unexpected, programmatic, headless: each loop below is a Python scene in [`fever/scenes/`](fever/scenes/),
+built with [BlenderProc](https://github.com/DLR-RM/BlenderProc) and assets that BlenderProc downloads from
+[Poly Haven](https://polyhaven.com), and rendered in shards on GitHub runners by
+[`.github/workflows/fever-dreams.yml`](.github/workflows/fever-dreams.yml). How to add one: [`.claude/skills/fever-dream-scene/SKILL.md`](.claude/skills/fever-dream-scene/SKILL.md).
+
+> **Status: waiting for its first published run.** [`.github/workflows/fever-dreams.yml`](.github/workflows/fever-dreams.yml) renders
+> these with BlenderProc and Poly Haven assets on GitHub runners.
+
 ## v002: luscious 48 fps, then through a 1970s CRT
 
 [![Pink donut on a 1970s CRT, slow motion](assets/props/food/pink_donut_sprinkles/v002/renders/pink_donut_sprinkles_v002_crt_readme.webp)](assets/props/food/pink_donut_sprinkles/v002/renders/pink_donut_sprinkles_v002_crt_48fps.mp4)
@@ -40,7 +50,7 @@ Everything is in [`assets/props/food/pink_donut_sprinkles/v002/`](assets/props/f
 | **Turntable** | 48 frames, 480×360, 16 samples, 16 fps GIF, 210.8 s |
 | **Built with** | Blender 4.5.14 LTS on `arm64` (macOS-26.6.2-arm64-arm-64bit) |
 | **Driven by** | MCP for Blender (execute_blender_code), 11 MCP tool calls |
-| **Workflow run** | [https://github.com/meefs/CeeloScratch/actions/runs/37250161853](https://github.com/meefs/CeeloScratch/actions/runs/37250161853) |
+| **Workflow run** | [https://github.com/meefs/CeeloScratch/actions/runs/37269414435](https://github.com/meefs/CeeloScratch/actions/runs/37269414435) |
 
 ### The MCP calls that built it
 

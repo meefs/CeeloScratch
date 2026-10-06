@@ -18,6 +18,8 @@ V2_DIR = Path("assets/props/food/pink_donut_sprinkles/v002")
 WORKFLOW = ".github/workflows/maiden-voyage-donut.yml"
 V2_WORKFLOW = ".github/workflows/donut-v002-crt.yml"
 V1_WORKFLOW_NAME = "Maiden voyage: pink donut"
+FEVER_DIR = Path("assets/fever")
+FEVER_WORKFLOW = ".github/workflows/fever-dreams.yml"
 
 
 def run_link():
@@ -62,6 +64,35 @@ def v2_section():
 
 Everything is in [`{d}/`]({d}/): `.blend`, `.glb`, hero still, both MP4s and WebPs, posters,
 `asset.json`, and one MCP transcript per render shard."""
+
+
+def fever_section():
+    scenes = sorted((json.loads(p.read_text()) for p in (ROOT / FEVER_DIR).glob("*/scene.json")
+                     if "mp4" in json.loads(p.read_text()).get("files", {})), key=lambda m: m["title"])
+    if not scenes:
+        return f"""> **Status: waiting for its first published run.** [`{FEVER_WORKFLOW}`]({FEVER_WORKFLOW}) renders
+> these with BlenderProc and Poly Haven assets on GitHub runners."""
+    blocks = []
+    for m in scenes:
+        d = (FEVER_DIR / m["id"]).as_posix()
+        f = m["files"]
+        haven = m.get("haven_assets", {})
+        used = sorted({rel.split("/")[1] for kind in ("hdri", "texture", "model") for rel in haven.get(kind, {}).values()}
+                      | {rel.split("/")[1] for rel in haven.get("hdri_pool", [])})
+        assets_line = ", ".join(f"`{u}`" for u in used) if used else "procedural only"
+        if "gif" in haven:
+            assets_line += f"; GIF: {haven['gif'].get('source')}"
+        run = m.get("workflow_run")
+        blocks.append(f"""### {m['title']}
+
+[![{m['title']}]({d}/{f['preview_webp']})]({d}/{f['mp4']})
+
+{m['logline']}
+
+*{m['seconds']} s loop at {m['fps']} fps, {m['resolution'][0]}×{m['resolution'][1]}, {m['samples']} samples;
+{m['render_seconds_per_frame']} s per frame across {m['shards']} runners ({m['blender']}). Poly Haven: {assets_line}.
+Click for the MP4 ({m['sizes_mb']['mp4']} MB){f' · [workflow run]({run})' if run else ''}.*""")
+    return "\n\n".join(blocks)
 
 
 def built_section(meta, transcript):
@@ -115,6 +146,15 @@ def main():
 
 A scratch space for creative experiments driven by Claude: pipelines run on GitHub Actions
 runners, and everything worth keeping is committed back here.
+
+## Fever Dreams: BlenderProc + Poly Haven
+
+Unexpected, programmatic, headless: each loop below is a Python scene in [`fever/scenes/`](fever/scenes/),
+built with [BlenderProc](https://github.com/DLR-RM/BlenderProc) and assets that BlenderProc downloads from
+[Poly Haven](https://polyhaven.com), and rendered in shards on GitHub runners by
+[`{FEVER_WORKFLOW}`]({FEVER_WORKFLOW}). How to add one: [`.claude/skills/fever-dream-scene/SKILL.md`](.claude/skills/fever-dream-scene/SKILL.md).
+
+{fever_section()}
 
 ## v002: luscious 48 fps, then through a 1970s CRT
 

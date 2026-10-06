@@ -1,0 +1,212 @@
+name: "Fever Dreams: BlenderProc + Poly Haven"
+
+# Headless psychedelic loops built with BlenderProc and Poly Haven assets, rendered on GitHub runners.
+#   plan     -> reads fever/scenes/*.py, builds the shard matrix
+#   setup    -> provisions BlenderProc's Blender (cached), fetches Poly Haven via `blenderproc download haven`
+#               (cached), picks each scene's assets, decomposes the GIF
+#   render   -> one job per (scene, shard), up to 20 in parallel
+#   assemble -> per scene: MP4 + README WebP + poster (or a contact sheet for previews)
+#   publish  -> commits videos and the README gallery (standard/high quality with publish ticked)
+on:
+  workflow_dispatch:
+    inputs:
+      scenes:
+        description: "Scene ids, comma-separated, or 'all'"
+        default: "all"
+        required: false
+      quality:
+        description: "preview = 6 sampled frames per scene at 480 px (smoke test); standard = full loops at 960 px"
+        type: choice
+        options: [preview, standard, high]
+        default: preview
+      publish:
+        description: "Commit videos and the README gallery (ignored for preview)"
+        type: boolean
+        default: false
+      gif_url:
+        description: "GIF for gif_tunnel (empty = Muybridge's 1878 galloping horse)"
+        default: ""
+        required: false
+
+permissions:
+  contents: write
+  actions: read
+
+concurrency:
+  group: fever-dreams
+  cancel-in-progress: false
+
+env:
+  BLENDERPROC_VERSION: "2.8.0"
+  BPROC_BLENDER: /home/runner/bproc-blender
+  HAVEN_DIR: /home/runner/haven
+  PYTHONUNBUFFERED: "1"
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      render_matrix: ${{ steps.plan.outputs.render_matrix }}
+      scenes: ${{ steps.plan.outputs.scenes }}
+      job_count: ${{ steps.plan.outputs.job_count }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: plan
+        run: |
+          python3 fever/tools/plan.py --scenes "${{ inputs.scenes }}" --quality "${{ inputs.quality }}" | tee -a "$GITHUB_OUTPUT"
+
+  setup:
+    needs: plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install BlenderProc ${{ env.BLENDERPROC_VERSION }}
+        run: pip install "blenderproc==${BLENDERPROC_VERSION}" pillow numpy
+      - name: Cache BlenderProc's Blender
+        id: blender-cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.BPROC_BLENDER }}
+          key: bproc-blender-${{ env.BLENDERPROC_VERSION }}-${{ hashFiles('fever/tools/warmup.py') }}
+      - name: Provision Blender, BlenderProc packages and scikit-image
+        if: steps.blender-cache.outputs.cache-hit != 'true'
+        run: |
+          blenderproc pip install scikit-image --blender-install-path "$BPROC_BLENDER"
+          blenderproc run fever/tools/warmup.py --blender-install-path "$BPROC_BLENDER"
+      - name: Cache Poly Haven pool
+        id: haven-cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.HAVEN_DIR }}
+          key: haven-1k-${{ hashFiles('fever/tools/fetch_haven.sh') }}
+      - name: Fetch Poly Haven assets (blenderproc download haven)
+        if: steps.haven-cache.outputs.cache-hit != 'true'
+        run: bash fever/tools/fetch_haven.sh "$HAVEN_DIR"
+      - name: Choose each scene's assets
+        run: python fever/tools/select_assets.py --haven "$HAVEN_DIR" --out haven_selected
+      - name: Decompose the GIF
+        run: |
+          python fever/tools/decompose_gif.py --url "${{ inputs.gif_url }}" --out haven_selected/gif \
+            --fallback assets/props/food/pink_donut_sprinkles/v001/renders/pink_donut_sprinkles_v001_turntable.gif
+      - uses: actions/upload-artifact@v4
+        with:
+          name: fever-assets
+          path: haven_selected/
+          retention-days: 3
+
+  render:
+    name: render ${{ matrix.scene }} [${{ matrix.shard }}/${{ matrix.shards }}]
+    needs: [plan, setup]
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    strategy:
+      fail-fast: false
+      max-parallel: 20
+      matrix: ${{ fromJSON(needs.plan.outputs.render_matrix) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install "blenderproc==${BLENDERPROC_VERSION}"
+      - name: Restore BlenderProc's Blender
+        uses: actions/cache/restore@v4
+        with:
+          path: ${{ env.BPROC_BLENDER }}
+          key: bproc-blender-${{ env.BLENDERPROC_VERSION }}-${{ hashFiles('fever/tools/warmup.py') }}
+          fail-on-cache-miss: true
+      - uses: actions/download-artifact@v4
+        with:
+          name: fever-assets
+          path: haven_selected
+      - name: Render ${{ matrix.scene }} shard ${{ matrix.shard }}
+        run: |
+          blenderproc run fever/run_scene.py --blender-install-path "$BPROC_BLENDER" \
+            --scene "${{ matrix.scene }}" --shard "${{ matrix.shard }}" --shards "${{ matrix.shards }}" \
+            --quality "${{ inputs.quality }}" --assets haven_selected --out out
+          echo "frames: $(ls out/frames | wc -l)"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: fever-frames-${{ matrix.scene }}-${{ matrix.shard }}
+          path: out/
+          retention-days: 3
+
+  assemble:
+    name: assemble ${{ matrix.scene }}
+    needs: [plan, render]
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        scene: ${{ fromJSON(needs.plan.outputs.scenes) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: |
+          pip install pillow numpy
+          command -v ffmpeg >/dev/null || (sudo apt-get update -q && sudo apt-get install -y -q ffmpeg)
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: fever-frames-${{ matrix.scene }}-*
+          path: rendered
+          merge-multiple: true
+      - name: Assemble ${{ matrix.scene }}
+        run: |
+          python fever/tools/assemble.py --scene "${{ matrix.scene }}" --frames rendered/frames --stats rendered \
+            --out "video/${{ matrix.scene }}" --quality "${{ inputs.quality }}"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: fever-video-${{ matrix.scene }}
+          path: video/${{ matrix.scene }}/
+          retention-days: 14
+
+  publish:
+    needs: [plan, assemble]
+    if: ${{ !cancelled() && inputs.publish && inputs.quality != 'preview' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: fever-video-*
+          path: videos
+      - name: File the videos
+        run: |
+          for dir in videos/fever-video-*; do
+            scene=${dir#videos/fever-video-}
+            mkdir -p "assets/fever/$scene"
+            cp -f "$dir"/* "assets/fever/$scene/"
+          done
+          ls -la assets/fever/*
+      - name: Regenerate README and manifest
+        run: |
+          python tools/build_readme.py
+          python tools/build_manifest.py
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A assets/fever README.md manifest.json
+          if git diff --cached --quiet; then echo "Nothing new to commit"; exit 0; fi
+          git commit -m "Fever Dreams: ${{ needs.plan.outputs.scenes }} (${{ inputs.quality }})" \
+                     -m "Workflow run: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          for attempt in 1 2 3; do
+            git pull --rebase origin "${GITHUB_REF_NAME}" && git push origin "HEAD:${GITHUB_REF_NAME}" && exit 0
+            sleep $((attempt * 5))
+          done
+          echo "::error::could not push results"; exit 1
