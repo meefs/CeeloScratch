@@ -1,6 +1,6 @@
 {
   "schema": "ceeloscratch.manifest/1",
-  "generated_at": "2026-10-06T05:58:44+00:00",
+  "generated_at": "2026-10-06T06:53:56+00:00",
   "layout": {
     ".github/workflows/": "GitHub Actions pipelines (runner jobs).",
     "assets/": "Generated deliverables. Pattern: assets/<category>/<subcategory>/<asset_name>/<version>/",
@@ -77,6 +77,12 @@
       "path": ".github/workflows/maiden-voyage-donut.yml",
       "bytes": 6544,
       "sha256": "154b7baeee489979468beb5af0602040467022bf254834bd5a1a235c13684531",
+      "role": "workflow"
+    },
+    {
+      "path": ".github/workflows/readme-sync.yml",
+      "bytes": 1806,
+      "sha256": "2bbac594eee211312ea14b29399b9cd1e4da13d9ab50c75685e23bce36eac307",
       "role": "workflow"
     },
     {
@@ -471,8 +477,8 @@
     },
     {
       "path": "tools/build_readme.py",
-      "bytes": 14637,
-      "sha256": "4de57bcd2b54e4acbc2c1b981f91b9c70770e46acc62f45f963e3eb01e907b83",
+      "bytes": 15413,
+      "sha256": "8369ab14f463def3ab71b9ab4fe559cd3c7360572bc59edc4fed08edaa2153cc",
       "role": "tooling"
     },
     {
@@ -509,6 +515,12 @@
       "path": "tools/make_gif.py",
       "bytes": 1878,
       "sha256": "fa531148bb537293f3e5a25d079ea5a577a8a0ed9995c2bb848fd8ce927cd3c9",
+      "role": "tooling"
+    },
+    {
+      "path": "tools/make_previews.py",
+      "bytes": 1676,
+      "sha256": "c7ad7dc28cc4727442544b26bb5c8f02c291882ae503b71d730a2dd2314ed9a8",
       "role": "tooling"
     }
   ]

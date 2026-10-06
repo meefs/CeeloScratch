@@ -1,0 +1,49 @@
+name: "README sync: previews for new videos"
+
+# Whenever assets change (or on demand): give every MP4 an autoplaying WebP preview, rebuild README.md
+# (gallery sections pick up new assets) and manifest.json, and commit the result. The bot's own commit
+# uses GITHUB_TOKEN, so it never re-triggers this workflow.
+on:
+  push:
+    paths:
+      - "assets/**"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: readme-sync-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Tools
+        run: |
+          pip install pillow numpy
+          command -v ffmpeg >/dev/null || (sudo apt-get update -q && sudo apt-get install -y -q ffmpeg)
+      - name: Make missing previews
+        run: python tools/make_previews.py
+      - name: Rebuild README and manifest
+        run: |
+          python tools/build_readme.py
+          python tools/build_manifest.py
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A assets README.md manifest.json
+          if git diff --cached --quiet; then echo "README already up to date"; exit 0; fi
+          git commit -m "README sync: previews and gallery for new assets" \
+                     -m "Workflow run: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          for attempt in 1 2 3; do
+            git pull --rebase origin "${GITHUB_REF_NAME}" && git push origin "HEAD:${GITHUB_REF_NAME}" && exit 0
+            sleep $((attempt * 5))
+          done
+          echo "::error::could not push"; exit 1

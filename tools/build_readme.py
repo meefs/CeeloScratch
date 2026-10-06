@@ -95,6 +95,23 @@ Click for the MP4 ({m['sizes_mb']['mp4']} MB){f' · [workflow run]({run})' if ru
     return "\n\n".join(blocks)
 
 
+def other_section():
+    """Any other MP4 under assets/ that has a <stem>_preview.webp (made by tools/make_previews.py)."""
+    from make_previews import covered
+    skip = covered()
+    blocks = []
+    for mp4 in sorted((ROOT / "assets").glob("**/*.mp4")):
+        preview = mp4.with_name(f"{mp4.stem}_preview.webp")
+        if mp4.resolve() in skip or not preview.exists():
+            continue
+        rel, prev = mp4.relative_to(ROOT).as_posix(), preview.relative_to(ROOT).as_posix()
+        blocks.append(f"[![{mp4.stem}]({prev})]({rel})\n\n`{rel}`")
+    if not blocks:
+        return ""
+    return "## More renders\n\nEvery other video in `assets/`, auto-previewed by `.github/workflows/readme-sync.yml`.\n\n" + \
+        "\n\n".join(blocks) + "\n\n"
+
+
 def built_section(meta, transcript):
     files = meta["files"]
     parts = meta["parts"]
@@ -156,7 +173,7 @@ built with [BlenderProc](https://github.com/DLR-RM/BlenderProc) and assets that 
 
 {fever_section()}
 
-## v002: luscious 48 fps, then through a 1970s CRT
+{other_section()}## v002: luscious 48 fps, then through a 1970s CRT
 
 {v2_section()}
 
