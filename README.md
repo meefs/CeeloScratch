@@ -10,8 +10,75 @@ built with [BlenderProc](https://github.com/DLR-RM/BlenderProc) and assets that 
 [Poly Haven](https://polyhaven.com), and rendered in shards on GitHub runners by
 [`.github/workflows/fever-dreams.yml`](.github/workflows/fever-dreams.yml). How to add one: [`.claude/skills/fever-dream-scene/SKILL.md`](.claude/skills/fever-dream-scene/SKILL.md).
 
-> **Status: waiting for its first published run.** [`.github/workflows/fever-dreams.yml`](.github/workflows/fever-dreams.yml) renders
-> these with BlenderProc and Poly Haven assets on GitHub runners.
+### Every World at Once
+
+[![Every World at Once](assets/fever/haven_orbs/haven_orbs_preview.webp)](assets/fever/haven_orbs/haven_orbs.mp4)
+
+A vortex of marbles, each holding a different Poly Haven world spinning inside it, orbiting a chrome planet that reflects them all.
+
+*16 s loop at 24 fps, 960×540, 24 samples;
+9.45 s per frame across 8 runners (4.2.1 LTS). Poly Haven: `acoustical_shell`, `blaubeuren_church_square`, `brown_photostudio_02`, `chinese_garden`, `clarens_night_02`, `courtyard_night`, `dry_meadow`, `ferndale_studio_03`, `ferndale_studio_12`, `greenwich_park_03`, `ladybrand_heritage_house`, `misty_dawn`, `museumplein`, `park_bench`, `piazza_martin_lutero`, `qwantani_moonrise`, `rogland_moonlit_night`, `satara_night_no_lamps`, `st_peters_square_night`, `studio_garden`, `studio_small_01`, `studio_wizja_01`, `unfinished_office_night`, `white_studio_02`, `wooden_studio_04`.
+Click for the MP4 (13.28 MB) · [workflow run](https://github.com/meefs/CeeloScratch/actions/runs/37421712300).*
+
+### Flipbook Wormhole
+
+[![Flipbook Wormhole](assets/fever/gif_tunnel/gif_tunnel_preview.webp)](assets/fever/gif_tunnel/gif_tunnel.mp4)
+
+A GIF decomposed into translucent panes along a trefoil knot; the camera flies through them at the GIF's frame rate and the animation re-assembles around you.
+
+*16 s loop at 24 fps, 960×540, 24 samples;
+29.96 s per frame across 8 runners (4.2.1 LTS). Poly Haven: `rogland_moonlit_night`; GIF: https://upload.wikimedia.org/wikipedia/commons/d/dd/Muybridge_race_horse_animated.gif.
+Click for the MP4 (22.67 MB) · [workflow run](https://github.com/meefs/CeeloScratch/actions/runs/37421712300).*
+
+### Hairy Julia
+
+[![Hairy Julia](assets/fever/hairy_julia/hairy_julia_preview.webp)](assets/fever/hairy_julia/hairy_julia.mp4)
+
+A four-dimensional quaternion Julia set, sliced through a moving hyperplane and furred with googly-eyed blobs that ride its mutating surface.
+
+*12 s loop at 24 fps, 960×540, 24 samples;
+39.88 s per frame across 12 runners (4.2.1 LTS). Poly Haven: `qwantani_night_puresky`.
+Click for the MP4 (22.52 MB) · [workflow run](https://github.com/meefs/CeeloScratch/actions/runs/37421712300).*
+
+### Hats to the Ceiling
+
+[![Hats to the Ceiling](assets/fever/hat_tower/hat_tower_preview.webp)](assets/fever/hat_tower/hat_tower.mp4)
+
+A marble bust wearing cowboy hats stacked to the ceiling, swaying between two mirrors that repeat it forever.
+
+*16 s loop at 24 fps, 960×540, 24 samples;
+23.3 s per frame across 10 runners (4.2.1 LTS). Poly Haven: `decrepit_wallpaper`, `diagonal_parquet`, `marble_bust_01`, `marble_cliff_06`, `wooden_studio_15`.
+Click for the MP4 (47.15 MB) · [workflow run](https://github.com/meefs/CeeloScratch/actions/runs/37421712300).*
+
+### Lawn-Chair Serpent
+
+[![Lawn-Chair Serpent](assets/fever/lawnchair_serpent/lawnchair_serpent_preview.webp)](assets/fever/lawnchair_serpent/lawnchair_serpent.mp4)
+
+A serpent whose scales are rosettes of rosettes of lawn chairs, slithering across a lawn under a sky that cycles through every hue.
+
+*16 s loop at 24 fps, 960×540, 24 samples;
+17.0 s per frame across 10 runners (4.2.1 LTS). Poly Haven: `aerial_grass_rock`, `painted_wooden_chair_01`, `park_parking`.
+Click for the MP4 (46.43 MB) · [workflow run](https://github.com/meefs/CeeloScratch/actions/runs/37421712300).*
+
+### Lorenz Lepidoptera
+
+[![Lorenz Lepidoptera](assets/fever/lorenz_lepidoptera/lorenz_lepidoptera_preview.webp)](assets/fever/lorenz_lepidoptera/lorenz_lepidoptera.mp4)
+
+The Lorenz butterfly drawn by fifteen hundred butterflies, each with its own wings and its own wingbeat, drifting along the chaos.
+
+*20 s loop at 24 fps, 960×540, 24 samples;
+7.74 s per frame across 12 runners (4.2.1 LTS). Poly Haven: `rooftop_night`.
+Click for the MP4 (21.18 MB) · [workflow run](https://github.com/meefs/CeeloScratch/actions/runs/37421712300).*
+
+### Paik's Spiral
+
+[![Paik's Spiral](assets/fever/paik_zoom/paik_zoom_preview.webp)](assets/fever/paik_zoom/paik_zoom.mp4)
+
+An infinite spiral zoom into a 1970s console TV that is showing the room it is in, forever.
+
+*12 s loop at 24 fps, 960×720, 24 samples;
+4.37 s per frame across 6 runners (4.2.1 LTS). Poly Haven: `ArmChair_01`, `decrepit_wallpaper`, `diagonal_parquet`, `dirty_carpet`.
+Click for the MP4 (1.38 MB) · [workflow run](https://github.com/meefs/CeeloScratch/actions/runs/37421712300).*
 
 ## v002: luscious 48 fps, then through a 1970s CRT
 

@@ -1,0 +1,41 @@
+{
+  "id": "lawnchair_serpent",
+  "title": "Lawn-Chair Serpent",
+  "logline": "A serpent whose scales are rosettes of rosettes of lawn chairs, slithering across a lawn under a sky that cycles through every hue.",
+  "seconds": 16,
+  "fps": 24,
+  "quality": "standard",
+  "frames_rendered": 384,
+  "frames_per_loop": 384,
+  "resolution": [
+    960,
+    540
+  ],
+  "samples": 24,
+  "blender": "4.2.1 LTS",
+  "shards": 10,
+  "render_seconds_total": 6529.0,
+  "render_seconds_per_frame": 17.0,
+  "haven_assets": {
+    "hdri": {
+      "world": "hdris/park_parking/park_parking_1k.hdr"
+    },
+    "texture": {
+      "ground": "textures/aerial_grass_rock"
+    },
+    "model": {
+      "chair": "models/painted_wooden_chair_01/painted_wooden_chair_01_1k.blend"
+    }
+  },
+  "workflow_run": "https://github.com/meefs/CeeloScratch/actions/runs/37421712300",
+  "files": {
+    "mp4": "lawnchair_serpent.mp4",
+    "preview_webp": "lawnchair_serpent_preview.webp",
+    "poster": "lawnchair_serpent_poster.png"
+  },
+  "sizes_mb": {
+    "mp4": 46.43,
+    "preview_webp": 2.92,
+    "poster": 1.16
+  }
+}

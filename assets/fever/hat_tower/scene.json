@@ -1,0 +1,43 @@
+{
+  "id": "hat_tower",
+  "title": "Hats to the Ceiling",
+  "logline": "A marble bust wearing cowboy hats stacked to the ceiling, swaying between two mirrors that repeat it forever.",
+  "seconds": 16,
+  "fps": 24,
+  "quality": "standard",
+  "frames_rendered": 384,
+  "frames_per_loop": 384,
+  "resolution": [
+    960,
+    540
+  ],
+  "samples": 24,
+  "blender": "4.2.1 LTS",
+  "shards": 10,
+  "render_seconds_total": 8948.1,
+  "render_seconds_per_frame": 23.3,
+  "haven_assets": {
+    "hdri": {
+      "world": "hdris/wooden_studio_15/wooden_studio_15_1k.hdr"
+    },
+    "texture": {
+      "floor": "textures/diagonal_parquet",
+      "wall": "textures/decrepit_wallpaper",
+      "pedestal": "textures/marble_cliff_06"
+    },
+    "model": {
+      "man": "models/marble_bust_01/marble_bust_01_1k.blend"
+    }
+  },
+  "workflow_run": "https://github.com/meefs/CeeloScratch/actions/runs/37421712300",
+  "files": {
+    "mp4": "hat_tower.mp4",
+    "preview_webp": "hat_tower_preview.webp",
+    "poster": "hat_tower_poster.png"
+  },
+  "sizes_mb": {
+    "mp4": 47.15,
+    "preview_webp": 2.89,
+    "poster": 1.29
+  }
+}

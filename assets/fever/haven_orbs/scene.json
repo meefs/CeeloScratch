@@ -1,0 +1,61 @@
+{
+  "id": "haven_orbs",
+  "title": "Every World at Once",
+  "logline": "A vortex of marbles, each holding a different Poly Haven world spinning inside it, orbiting a chrome planet that reflects them all.",
+  "seconds": 16,
+  "fps": 24,
+  "quality": "standard",
+  "frames_rendered": 384,
+  "frames_per_loop": 384,
+  "resolution": [
+    960,
+    540
+  ],
+  "samples": 24,
+  "blender": "4.2.1 LTS",
+  "shards": 8,
+  "render_seconds_total": 3627.2,
+  "render_seconds_per_frame": 9.45,
+  "haven_assets": {
+    "hdri": {
+      "world": "hdris/courtyard_night/courtyard_night_1k.hdr"
+    },
+    "hdri_pool": [
+      "hdris/acoustical_shell/acoustical_shell_1k.hdr",
+      "hdris/blaubeuren_church_square/blaubeuren_church_square_1k.hdr",
+      "hdris/brown_photostudio_02/brown_photostudio_02_1k.hdr",
+      "hdris/chinese_garden/chinese_garden_1k.hdr",
+      "hdris/clarens_night_02/clarens_night_02_1k.hdr",
+      "hdris/dry_meadow/dry_meadow_1k.hdr",
+      "hdris/ferndale_studio_03/ferndale_studio_03_1k.hdr",
+      "hdris/ferndale_studio_12/ferndale_studio_12_1k.hdr",
+      "hdris/greenwich_park_03/greenwich_park_03_1k.hdr",
+      "hdris/ladybrand_heritage_house/ladybrand_heritage_house_1k.hdr",
+      "hdris/misty_dawn/misty_dawn_1k.hdr",
+      "hdris/museumplein/museumplein_1k.hdr",
+      "hdris/park_bench/park_bench_1k.hdr",
+      "hdris/piazza_martin_lutero/piazza_martin_lutero_1k.hdr",
+      "hdris/qwantani_moonrise/qwantani_moonrise_1k.hdr",
+      "hdris/rogland_moonlit_night/rogland_moonlit_night_1k.hdr",
+      "hdris/satara_night_no_lamps/satara_night_no_lamps_1k.hdr",
+      "hdris/st_peters_square_night/st_peters_square_night_1k.hdr",
+      "hdris/studio_garden/studio_garden_1k.hdr",
+      "hdris/studio_small_01/studio_small_01_1k.hdr",
+      "hdris/studio_wizja_01/studio_wizja_01_1k.hdr",
+      "hdris/unfinished_office_night/unfinished_office_night_1k.hdr",
+      "hdris/white_studio_02/white_studio_02_1k.hdr",
+      "hdris/wooden_studio_04/wooden_studio_04_1k.hdr"
+    ]
+  },
+  "workflow_run": "https://github.com/meefs/CeeloScratch/actions/runs/37421712300",
+  "files": {
+    "mp4": "haven_orbs.mp4",
+    "preview_webp": "haven_orbs_preview.webp",
+    "poster": "haven_orbs_poster.png"
+  },
+  "sizes_mb": {
+    "mp4": 13.28,
+    "preview_webp": 2.93,
+    "poster": 0.76
+  }
+}

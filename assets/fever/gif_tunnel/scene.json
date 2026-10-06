@@ -1,0 +1,40 @@
+{
+  "id": "gif_tunnel",
+  "title": "Flipbook Wormhole",
+  "logline": "A GIF decomposed into translucent panes along a trefoil knot; the camera flies through them at the GIF's frame rate and the animation re-assembles around you.",
+  "seconds": 16,
+  "fps": 24,
+  "quality": "standard",
+  "frames_rendered": 384,
+  "frames_per_loop": 384,
+  "resolution": [
+    960,
+    540
+  ],
+  "samples": 24,
+  "blender": "4.2.1 LTS",
+  "shards": 8,
+  "render_seconds_total": 11504.2,
+  "render_seconds_per_frame": 29.96,
+  "haven_assets": {
+    "hdri": {
+      "world": "hdris/rogland_moonlit_night/rogland_moonlit_night_1k.hdr"
+    },
+    "gif": {
+      "source": "https://upload.wikimedia.org/wikipedia/commons/d/dd/Muybridge_race_horse_animated.gif",
+      "frames": 15,
+      "panes": 165
+    }
+  },
+  "workflow_run": "https://github.com/meefs/CeeloScratch/actions/runs/37421712300",
+  "files": {
+    "mp4": "gif_tunnel.mp4",
+    "preview_webp": "gif_tunnel_preview.webp",
+    "poster": "gif_tunnel_poster.png"
+  },
+  "sizes_mb": {
+    "mp4": 22.67,
+    "preview_webp": 0.96,
+    "poster": 0.87
+  }
+}

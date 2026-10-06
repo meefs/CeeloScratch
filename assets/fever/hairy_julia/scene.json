@@ -1,0 +1,35 @@
+{
+  "id": "hairy_julia",
+  "title": "Hairy Julia",
+  "logline": "A four-dimensional quaternion Julia set, sliced through a moving hyperplane and furred with googly-eyed blobs that ride its mutating surface.",
+  "seconds": 12,
+  "fps": 24,
+  "quality": "standard",
+  "frames_rendered": 288,
+  "frames_per_loop": 288,
+  "resolution": [
+    960,
+    540
+  ],
+  "samples": 24,
+  "blender": "4.2.1 LTS",
+  "shards": 12,
+  "render_seconds_total": 11484.5,
+  "render_seconds_per_frame": 39.88,
+  "haven_assets": {
+    "hdri": {
+      "world": "hdris/qwantani_night_puresky/qwantani_night_puresky_1k.hdr"
+    }
+  },
+  "workflow_run": "https://github.com/meefs/CeeloScratch/actions/runs/37421712300",
+  "files": {
+    "mp4": "hairy_julia.mp4",
+    "preview_webp": "hairy_julia_preview.webp",
+    "poster": "hairy_julia_poster.png"
+  },
+  "sizes_mb": {
+    "mp4": 22.52,
+    "preview_webp": 1.8,
+    "poster": 0.89
+  }
+}

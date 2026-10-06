@@ -1,6 +1,6 @@
 {
   "schema": "ceeloscratch.manifest/1",
-  "generated_at": "2026-10-06T06:53:56+00:00",
+  "generated_at": "2026-10-06T08:01:04+00:00",
   "layout": {
     ".github/workflows/": "GitHub Actions pipelines (runner jobs).",
     "assets/": "Generated deliverables. Pattern: assets/<category>/<subcategory>/<asset_name>/<version>/",
@@ -69,8 +69,8 @@
     },
     {
       "path": ".github/workflows/fever-dreams.yml",
-      "bytes": 8072,
-      "sha256": "a70e3729c1720cc31b5fc92264f84a700671dcf1dc97d0193e60628046dc635d",
+      "bytes": 8657,
+      "sha256": "2bb1afef9e3dd61c9066e4319db3e25a195da99bf8a9cbac34127bd32a784e87",
       "role": "workflow"
     },
     {
@@ -81,8 +81,8 @@
     },
     {
       "path": ".github/workflows/readme-sync.yml",
-      "bytes": 1806,
-      "sha256": "2bbac594eee211312ea14b29399b9cd1e4da13d9ab50c75685e23bce36eac307",
+      "bytes": 1922,
+      "sha256": "d226ec1b62e7b5e35915f3fbe9c03b0f818111fa51163b2d640358d31947e791",
       "role": "workflow"
     },
     {
@@ -93,9 +93,177 @@
     },
     {
       "path": "README.md",
-      "bytes": 11310,
-      "sha256": "6e16149dafa3dc5eb676ca9115bdd866ece5e15a47edacf94cd002897127a650",
+      "bytes": 15455,
+      "sha256": "2051e5834fca65d17a28931ec8a648922c5dc21c0fe2488d2e5000cd9232f467",
       "role": "repo-meta"
+    },
+    {
+      "path": "assets/fever/gif_tunnel/gif_tunnel.mp4",
+      "bytes": 22668825,
+      "sha256": "26d99ca3b0d371c4658763d1132000e4c962cf18d884465629dc1153c8148255",
+      "role": "video"
+    },
+    {
+      "path": "assets/fever/gif_tunnel/gif_tunnel_poster.png",
+      "bytes": 868881,
+      "sha256": "9ac3bf41d50cef3ef1ec9ad7b22caa019a0477f89f511f8aa71dadfc06a76916",
+      "role": "render"
+    },
+    {
+      "path": "assets/fever/gif_tunnel/gif_tunnel_preview.webp",
+      "bytes": 959166,
+      "sha256": "1026672dcecdcd09c8f4f7aaefdba3b3fc2f701a65a21b0237440d9d83dfe599",
+      "role": "animated-preview"
+    },
+    {
+      "path": "assets/fever/gif_tunnel/scene.json",
+      "bytes": 1092,
+      "sha256": "f2a2ecffbf73bc59afa210e98c699055e1e5dd83c397f31308cde393d0d7eade",
+      "role": "scene-metadata"
+    },
+    {
+      "path": "assets/fever/hairy_julia/hairy_julia.mp4",
+      "bytes": 22519469,
+      "sha256": "0e7148dccab181a3bedc1c1b01e1b3631dc94a02ccc9dea5ad22f7397dde985e",
+      "role": "video"
+    },
+    {
+      "path": "assets/fever/hairy_julia/hairy_julia_poster.png",
+      "bytes": 885611,
+      "sha256": "4a54ca079f4134e0a5664d93d1f8cb6a47267f1651ca8a88f04100c2719c144e",
+      "role": "render"
+    },
+    {
+      "path": "assets/fever/hairy_julia/hairy_julia_preview.webp",
+      "bytes": 1795830,
+      "sha256": "4ca3ebb380248f4dc823a270bd5c4c7a456a0311d6e7285bcd1f6c6d1a15893f",
+      "role": "animated-preview"
+    },
+    {
+      "path": "assets/fever/hairy_julia/scene.json",
+      "bytes": 911,
+      "sha256": "c0f1687ae2824a2f0a0722fdcc8f79b6b8581c1d1e60995522f1e7ae2587b893",
+      "role": "scene-metadata"
+    },
+    {
+      "path": "assets/fever/hat_tower/hat_tower.mp4",
+      "bytes": 47145787,
+      "sha256": "f9da76c6a7c5a5ccd0c493a39fb2081c7a85f8a4862fc75fc2ea4b832a20220b",
+      "role": "video"
+    },
+    {
+      "path": "assets/fever/hat_tower/hat_tower_poster.png",
+      "bytes": 1294060,
+      "sha256": "74d1d468d3684b95783421e55a73ccf97bebe95284b7a633d66226c8e894536e",
+      "role": "render"
+    },
+    {
+      "path": "assets/fever/hat_tower/hat_tower_preview.webp",
+      "bytes": 2891844,
+      "sha256": "524ddffd72932ea4219f18e1c46f2d0de2105d591813d2fbad408b8dc7e724fa",
+      "role": "animated-preview"
+    },
+    {
+      "path": "assets/fever/hat_tower/scene.json",
+      "bytes": 1107,
+      "sha256": "42110bc452ff7d2efb606b3b9e7057f38d6c38d9eea00256353e74517629ed4b",
+      "role": "scene-metadata"
+    },
+    {
+      "path": "assets/fever/haven_orbs/haven_orbs.mp4",
+      "bytes": 13282365,
+      "sha256": "e91d6fd910751e87b95b6cc30faa9814cde734d40a8d67c9d547a95bc10ae865",
+      "role": "video"
+    },
+    {
+      "path": "assets/fever/haven_orbs/haven_orbs_poster.png",
+      "bytes": 756695,
+      "sha256": "ba22b76d923a0a8854a2873f5b9de1a6965621b76409120bd968d372adf971fa",
+      "role": "render"
+    },
+    {
+      "path": "assets/fever/haven_orbs/haven_orbs_preview.webp",
+      "bytes": 2934920,
+      "sha256": "08dbbd5530d5e31a1998c6931f5c1dd2f8ea35009924a6b1debbe1f43ee18e28",
+      "role": "animated-preview"
+    },
+    {
+      "path": "assets/fever/haven_orbs/scene.json",
+      "bytes": 2302,
+      "sha256": "4912c8b9aa6394932bb150849d649d366c43044e31c601313739139ea719db63",
+      "role": "scene-metadata"
+    },
+    {
+      "path": "assets/fever/lawnchair_serpent/lawnchair_serpent.mp4",
+      "bytes": 46432812,
+      "sha256": "92a1772f1ab2dbc428efd32bb4a4264c5a25ab0b3173cbfce22747e81b5af00d",
+      "role": "video"
+    },
+    {
+      "path": "assets/fever/lawnchair_serpent/lawnchair_serpent_poster.png",
+      "bytes": 1155252,
+      "sha256": "f72b77da5e4bd21a9294813147c4db7f14b168247136846e8fb74d766d81c6e0",
+      "role": "render"
+    },
+    {
+      "path": "assets/fever/lawnchair_serpent/lawnchair_serpent_preview.webp",
+      "bytes": 2918058,
+      "sha256": "b58d2bc7b003c4db93659efb44b9e904dfe9d2e7694b9dbe7897da225ccf071d",
+      "role": "animated-preview"
+    },
+    {
+      "path": "assets/fever/lawnchair_serpent/scene.json",
+      "bytes": 1083,
+      "sha256": "b4ae53074ff52abb2b9cd6fbd86fd1a7a5a2e014f5936937c3e1c8e12ba00757",
+      "role": "scene-metadata"
+    },
+    {
+      "path": "assets/fever/lorenz_lepidoptera/lorenz_lepidoptera.mp4",
+      "bytes": 21179338,
+      "sha256": "48ac433c6296c668d2e1b4860275eeb8523456fcbbe51c595274ef81bebd3c4f",
+      "role": "video"
+    },
+    {
+      "path": "assets/fever/lorenz_lepidoptera/lorenz_lepidoptera_poster.png",
+      "bytes": 843834,
+      "sha256": "f0d54eadc13cf785fe49aa5c6015c93a687dc1a80664209d41a0b21073c153e4",
+      "role": "render"
+    },
+    {
+      "path": "assets/fever/lorenz_lepidoptera/lorenz_lepidoptera_preview.webp",
+      "bytes": 3635806,
+      "sha256": "261b3a9b21efb4dace2003abc0763e41f5441adedc67348e029d21513addcf19",
+      "role": "animated-preview"
+    },
+    {
+      "path": "assets/fever/lorenz_lepidoptera/scene.json",
+      "bytes": 916,
+      "sha256": "46f3057ff20fab314d60480ef1241bc18eeed1eedfe079633392d4297cc40a6f",
+      "role": "scene-metadata"
+    },
+    {
+      "path": "assets/fever/paik_zoom/paik_zoom.mp4",
+      "bytes": 1380383,
+      "sha256": "410e4f93828169261bd0dadc178055617c81d78a1786a1c96d9a123ec3f8478c",
+      "role": "video"
+    },
+    {
+      "path": "assets/fever/paik_zoom/paik_zoom_poster.png",
+      "bytes": 504249,
+      "sha256": "07b2e47e51f67f89e7b15370510e2ac4197c30a1e0c2cb28def1cd83e1cf80c7",
+      "role": "render"
+    },
+    {
+      "path": "assets/fever/paik_zoom/paik_zoom_preview.webp",
+      "bytes": 474248,
+      "sha256": "d3dcaa61b796671ee24404fdcb8ebe610aefb5b211a25ca51fdbe0fcd8e493b1",
+      "role": "animated-preview"
+    },
+    {
+      "path": "assets/fever/paik_zoom/scene.json",
+      "bytes": 982,
+      "sha256": "e9379eb3db003d77e29bfc2d4faca8777c74cc06701e066bde0ff2a10fa8e488",
+      "role": "scene-metadata"
     },
     {
       "path": "assets/props/food/pink_donut_sprinkles/v001/asset.json",

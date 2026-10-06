@@ -1,0 +1,35 @@
+{
+  "id": "lorenz_lepidoptera",
+  "title": "Lorenz Lepidoptera",
+  "logline": "The Lorenz butterfly drawn by fifteen hundred butterflies, each with its own wings and its own wingbeat, drifting along the chaos.",
+  "seconds": 20,
+  "fps": 24,
+  "quality": "standard",
+  "frames_rendered": 480,
+  "frames_per_loop": 480,
+  "resolution": [
+    960,
+    540
+  ],
+  "samples": 24,
+  "blender": "4.2.1 LTS",
+  "shards": 12,
+  "render_seconds_total": 3716.9,
+  "render_seconds_per_frame": 7.74,
+  "haven_assets": {
+    "hdri": {
+      "world": "hdris/rooftop_night/rooftop_night_1k.hdr"
+    }
+  },
+  "workflow_run": "https://github.com/meefs/CeeloScratch/actions/runs/37421712300",
+  "files": {
+    "mp4": "lorenz_lepidoptera.mp4",
+    "preview_webp": "lorenz_lepidoptera_preview.webp",
+    "poster": "lorenz_lepidoptera_poster.png"
+  },
+  "sizes_mb": {
+    "mp4": 21.18,
+    "preview_webp": 3.64,
+    "poster": 0.84
+  }
+}

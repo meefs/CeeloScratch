@@ -1,0 +1,40 @@
+{
+  "id": "paik_zoom",
+  "title": "Paik's Spiral",
+  "logline": "An infinite spiral zoom into a 1970s console TV that is showing the room it is in, forever.",
+  "seconds": 12,
+  "fps": 24,
+  "quality": "standard",
+  "frames_rendered": 288,
+  "frames_per_loop": 288,
+  "resolution": [
+    960,
+    720
+  ],
+  "samples": 24,
+  "blender": "4.2.1 LTS",
+  "shards": 6,
+  "render_seconds_total": 1257.6,
+  "render_seconds_per_frame": 4.37,
+  "haven_assets": {
+    "texture": {
+      "tv": "textures/diagonal_parquet",
+      "wall": "textures/decrepit_wallpaper",
+      "floor": "textures/dirty_carpet"
+    },
+    "model": {
+      "chair": "models/ArmChair_01/ArmChair_01_1k.blend"
+    }
+  },
+  "workflow_run": "https://github.com/meefs/CeeloScratch/actions/runs/37421712300",
+  "files": {
+    "mp4": "paik_zoom.mp4",
+    "preview_webp": "paik_zoom_preview.webp",
+    "poster": "paik_zoom_poster.png"
+  },
+  "sizes_mb": {
+    "mp4": 1.38,
+    "preview_webp": 0.47,
+    "poster": 0.5
+  }
+}
